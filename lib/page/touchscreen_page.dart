@@ -9,7 +9,7 @@ class TouchScreenPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.d('TouchScreenPage build');
+    logBuildAction();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return Scaffold(
       body: Center(

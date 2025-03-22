@@ -12,6 +12,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logBuildAction();
     final isDarkTheme = ref.watch(isDarkThemeProvider);
     return GestureDetector(
       onTap: () => primaryFocus?.unfocus(),
@@ -61,6 +62,7 @@ class TransmissionRateSlider extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logBuildAction();
     final transmissionRate = useState(ref.watch(sendingRateProvider));
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -82,11 +84,11 @@ class TransmissionRateSlider extends HookConsumerWidget {
             onChanged: (value) {
               transmissionRate.value = value.toInt();
             },
-            onChangeEnd: (value) {
-              logger.d('onChangeEnd: $value');
+            onChangeEnd: (_) {
+              logger.d('Port番号を保存: ${transmissionRate.value}');
               ref
                   .read(sendingRateProvider.notifier)
-                  .setTransmissionRate(value.toInt());
+                  .setTransmissionRate(transmissionRate.value);
             },
           ),
         ),
@@ -119,13 +121,13 @@ class IpAddressInput extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logBuildAction();
     final ipAddress = ref.watch(ipAddressProvider);
     final ipParts = ipAddress.split('.');
 
     final textEditingControllers = [
       for (int i = 0; i < 4; i++) useTextEditingController(text: ipParts[i]),
     ];
-    logger.d('ip rebuild');
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -176,6 +178,7 @@ class PortNumberInput extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logBuildAction();
     final portNumber = ref.watch(portNumberProvider);
     final textEditingController = useTextEditingController(
       text: portNumber.toString(),

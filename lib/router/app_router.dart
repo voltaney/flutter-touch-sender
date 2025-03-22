@@ -12,7 +12,7 @@ final appRouter = GoRouter(
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        logger.d('★ route builder');
+        logger.i('StatefulShellブランチビルド発火');
         return ScreenBaseLayoutPage(navigationShell: navigationShell);
       },
       branches: [

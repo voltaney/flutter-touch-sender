@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/router/routes.dart';
+import 'package:touch_sender/util/logger.dart';
 
 class ScreenBaseLayoutPage extends StatelessWidget {
   const ScreenBaseLayoutPage({super.key, required this.navigationShell});
@@ -11,6 +12,7 @@ class ScreenBaseLayoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logBuildAction();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return Scaffold(
       body: SafeArea(child: navigationShell),
