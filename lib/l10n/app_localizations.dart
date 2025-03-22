@@ -131,6 +131,12 @@ abstract class AppLocalizations {
   /// **'Port Number'**
   String get portNumber;
 
+  /// No description provided for @sendingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending Rate'**
+  String get sendingRate;
+
   /// No description provided for @darkMode.
   ///
   /// In en, this message translates to:

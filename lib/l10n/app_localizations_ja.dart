@@ -27,5 +27,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get portNumber => 'ポート番号';
 
   @override
+  String get sendingRate => '送信レート';
+
+  @override
   String get darkMode => 'ダークモード';
 }
