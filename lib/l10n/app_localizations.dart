@@ -125,6 +125,12 @@ abstract class AppLocalizations {
   /// **'IP Address'**
   String get ipAddress;
 
+  /// No description provided for @portNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Port Number'**
+  String get portNumber;
+
   /// No description provided for @darkMode.
   ///
   /// In en, this message translates to:

@@ -18,12 +18,18 @@ class SettingsScreen extends ConsumerWidget {
       child: SettingsList(
         sections: [
           SettingsSection(
+            margin: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
             title: Text(AppLocalizations.of(context)!.network),
             tiles: [
               SettingsTile(
                 title: Text(AppLocalizations.of(context)!.ipAddress),
                 leading: const Icon(Icons.wifi),
                 value: const IpAddressInput(),
+              ),
+              SettingsTile(
+                title: Text(AppLocalizations.of(context)!.portNumber),
+                leading: const Icon(Icons.numbers),
+                value: const PortNumberInput(),
               ),
             ],
           ),
@@ -99,6 +105,40 @@ class IpAddressInput extends HookConsumerWidget {
             ),
         ],
       ],
+    );
+  }
+}
+
+class PortNumberInput extends HookConsumerWidget {
+  const PortNumberInput({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final portNumber = ref.watch(portNumberProvider);
+    final textEditingController = useTextEditingController(
+      text: portNumber.toString(),
+    );
+    return SizedBox(
+      width: 80,
+      height: 40,
+      child: TextFormField(
+        controller: textEditingController,
+        textAlign: TextAlign.center,
+        textAlignVertical: TextAlignVertical.bottom,
+        keyboardType: TextInputType.number,
+        maxLength: 5,
+        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+        decoration: const InputDecoration(counterText: ''),
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        onChanged: (value) {
+          var newValue = 0;
+          if (value.isNotEmpty) {
+            newValue = int.parse(value);
+          }
+          ref.read(portNumberProvider.notifier).setPortNumber(newValue);
+          textEditingController.text = newValue.toString();
+        },
+      ),
     );
   }
 }

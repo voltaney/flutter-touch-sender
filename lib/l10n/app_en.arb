@@ -4,5 +4,6 @@
   "network": "Network",
   "appearance": "Appearance",
   "ipAddress": "IP Address",
+  "portNumber": "Port Number",
   "darkMode": "Dark Mode"
 }

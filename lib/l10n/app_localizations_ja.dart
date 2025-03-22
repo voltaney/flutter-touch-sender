@@ -24,5 +24,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get ipAddress => 'IPアドレス';
 
   @override
+  String get portNumber => 'ポート番号';
+
+  @override
   String get darkMode => 'ダークモード';
 }

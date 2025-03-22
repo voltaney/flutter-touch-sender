@@ -37,6 +37,27 @@ class IpAddress extends _$IpAddress {
 }
 
 @riverpod
+class PortNumber extends _$PortNumber {
+  static const initialValue = 50000;
+
+  @override
+  int build() {
+    final preferences = ref.watch(sharedPreferencesProvider);
+    listenSelf((prev, next) {
+      preferences.setInt(SharedPreferencesKeys.portNumber, next);
+    });
+    return preferences.getInt(SharedPreferencesKeys.portNumber) ?? initialValue;
+  }
+
+  void setPortNumber(int value) {
+    if (value < 0) {
+      throw ArgumentError('value must be greater than or equal to 0');
+    }
+    state = value;
+  }
+}
+
+@riverpod
 class IsDarkTheme extends _$IsDarkTheme {
   @override
   bool build() {

@@ -23,6 +23,23 @@ final ipAddressProvider =
     );
 
 typedef _$IpAddress = AutoDisposeNotifier<String>;
+String _$portNumberHash() => r'1fc3ba06102f288305ff22f6ee2df54d4a4bccd1';
+
+/// See also [PortNumber].
+@ProviderFor(PortNumber)
+final portNumberProvider =
+    AutoDisposeNotifierProvider<PortNumber, int>.internal(
+      PortNumber.new,
+      name: r'portNumberProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$portNumberHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$PortNumber = AutoDisposeNotifier<int>;
 String _$isDarkThemeHash() => r'11ef093e6b1860c62e126d6c3f642ecb76034dfc';
 
 /// See also [IsDarkTheme].

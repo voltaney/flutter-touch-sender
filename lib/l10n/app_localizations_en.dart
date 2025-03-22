@@ -24,5 +24,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ipAddress => 'IP Address';
 
   @override
+  String get portNumber => 'Port Number';
+
+  @override
   String get darkMode => 'Dark Mode';
 }

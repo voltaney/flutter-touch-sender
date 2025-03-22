@@ -4,5 +4,6 @@
   "network": "ネットワーク",
   "appearance": "外観",
   "ipAddress": "IPアドレス",
+  "portNumber": "ポート番号",
   "darkMode": "ダークモード"
 }
