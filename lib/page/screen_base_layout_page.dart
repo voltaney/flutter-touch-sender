@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/router/routes.dart';
 
 class ScreenBaseLayoutPage extends StatelessWidget {
@@ -15,11 +16,14 @@ class ScreenBaseLayoutPage extends StatelessWidget {
       body: SafeArea(child: navigationShell),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.help), label: 'Tutorial'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: const Icon(Icons.help),
+            label: AppLocalizations.of(context)!.help,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: AppLocalizations.of(context)!.setting,
           ),
         ],
         currentIndex: navigationShell.currentIndex,
