@@ -58,6 +58,28 @@ class PortNumber extends _$PortNumber {
 }
 
 @riverpod
+class SendingRate extends _$SendingRate {
+  static const initialValue = 100;
+
+  @override
+  int build() {
+    final preferences = ref.watch(sharedPreferencesProvider);
+    listenSelf((prev, next) {
+      preferences.setInt(SharedPreferencesKeys.sendingRate, next);
+    });
+    return preferences.getInt(SharedPreferencesKeys.sendingRate) ??
+        initialValue;
+  }
+
+  void setTransmissionRate(int value) {
+    if (value < 0) {
+      throw ArgumentError('value must be greater than or equal to 0');
+    }
+    state = value;
+  }
+}
+
+@riverpod
 class IsDarkTheme extends _$IsDarkTheme {
   @override
   bool build() {

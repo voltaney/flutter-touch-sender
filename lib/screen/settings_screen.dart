@@ -18,7 +18,6 @@ class SettingsScreen extends ConsumerWidget {
       child: SettingsList(
         sections: [
           SettingsSection(
-            margin: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
             title: Text(AppLocalizations.of(context)!.network),
             tiles: [
               SettingsTile(
@@ -30,6 +29,11 @@ class SettingsScreen extends ConsumerWidget {
                 title: Text(AppLocalizations.of(context)!.portNumber),
                 leading: const Icon(Icons.numbers),
                 value: const PortNumberInput(),
+              ),
+              SettingsTile(
+                title: Text(AppLocalizations.of(context)!.sendingRate),
+                leading: const Icon(Icons.speed),
+                value: const TransmissionRateSlider(),
               ),
             ],
           ),
@@ -49,6 +53,64 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+class TransmissionRateSlider extends HookConsumerWidget {
+  const TransmissionRateSlider({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transmissionRate = useState(ref.watch(sendingRateProvider));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Text('${transmissionRate.value} Hz'),
+        SliderTheme(
+          data: SliderThemeData(
+            trackShape: CustomTrackShape(),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+          ),
+          child: Slider(
+            min: 1,
+            max: 1000,
+            divisions: 20,
+            value: transmissionRate.value.toDouble(),
+            label: transmissionRate.value.toString(),
+            onChanged: (value) {
+              transmissionRate.value = value.toInt();
+            },
+            onChangeEnd: (value) {
+              logger.d('onChangeEnd: $value');
+              ref
+                  .read(sendingRateProvider.notifier)
+                  .setTransmissionRate(value.toInt());
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomTrackShape extends RoundedRectSliderTrackShape {
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final double trackHeight = sliderTheme.trackHeight!;
+    final double trackLeft = offset.dx;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackWidth = parentBox.size.width;
+
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
 

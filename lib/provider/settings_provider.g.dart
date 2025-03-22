@@ -40,6 +40,23 @@ final portNumberProvider =
     );
 
 typedef _$PortNumber = AutoDisposeNotifier<int>;
+String _$sendingRateHash() => r'9ff7911bc9e36a8ecd7779e0316dbc6cd2241bc6';
+
+/// See also [SendingRate].
+@ProviderFor(SendingRate)
+final sendingRateProvider =
+    AutoDisposeNotifierProvider<SendingRate, int>.internal(
+      SendingRate.new,
+      name: r'sendingRateProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$sendingRateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$SendingRate = AutoDisposeNotifier<int>;
 String _$isDarkThemeHash() => r'11ef093e6b1860c62e126d6c3f642ecb76034dfc';
 
 /// See also [IsDarkTheme].

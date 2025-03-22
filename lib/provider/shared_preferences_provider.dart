@@ -18,4 +18,5 @@ class SharedPreferencesKeys {
   static const String isDarkTheme = 'isDarkTheme';
   static const String ipAddress = 'ipAddress';
   static const String portNumber = 'portNumber';
+  static const String sendingRate = 'sendingRate';
 }
