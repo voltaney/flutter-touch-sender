@@ -5,11 +5,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/provider/settings_provider.dart';
 import 'package:touch_sender/provider/shared_preferences_provider.dart';
 import 'package:touch_sender/router/app_router.dart';
-
-import 'util/logger.dart';
+import 'package:touch_sender/util/logger.dart';
 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
@@ -96,6 +96,8 @@ class MainApp extends ConsumerWidget {
       darkTheme: darkTheme,
       themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       routerConfig: appRouter,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

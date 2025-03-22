@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_settings_ui/flutter_settings_ui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/provider/settings_provider.dart';
 import 'package:touch_sender/util/logger.dart';
 
@@ -14,44 +15,32 @@ class SettingsScreen extends ConsumerWidget {
     final isDarkTheme = ref.watch(isDarkThemeProvider);
     return GestureDetector(
       onTap: () => primaryFocus?.unfocus(),
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Settings')),
-        body: SettingsList(
-          sections: [
-            SettingsSection(
-              title: const Text('Section1'),
-              tiles: [
-                SettingsTile.switchTile(
-                  initialValue: isDarkTheme,
-                  title: const Text('Dark Theme'),
-                  leading: const Icon(Icons.computer),
-                  onToggle: (bool value) {
-                    ref
-                        .read(isDarkThemeProvider.notifier)
-                        .setIsDarkTheme(value);
-                  },
-                ),
-                SettingsTile(
-                  title: const Text('IP Address'),
-                  leading: const Icon(Icons.language),
-                  value: const IpAddressInput(),
-                ),
-              ],
-            ),
-            SettingsSection(
-              title: const Text('Section2'),
-              tiles: [
-                SettingsTile.switchTile(
-                  description: const Text('Enables cheat mode'),
-                  initialValue: true,
-                  onToggle: (bool value) {},
-                  title: const Text('Use cheat mode'),
-                  leading: const Icon(Icons.computer),
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: SettingsList(
+        sections: [
+          SettingsSection(
+            title: Text(AppLocalizations.of(context)!.network),
+            tiles: [
+              SettingsTile(
+                title: Text(AppLocalizations.of(context)!.ipAddress),
+                leading: const Icon(Icons.wifi),
+                value: const IpAddressInput(),
+              ),
+            ],
+          ),
+          SettingsSection(
+            title: Text(AppLocalizations.of(context)!.appearance),
+            tiles: [
+              SettingsTile.switchTile(
+                initialValue: isDarkTheme,
+                title: Text(AppLocalizations.of(context)!.darkMode),
+                leading: const Icon(Icons.dark_mode),
+                onToggle: (bool value) {
+                  ref.read(isDarkThemeProvider.notifier).setIsDarkTheme(value);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
