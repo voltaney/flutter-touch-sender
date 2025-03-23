@@ -63,6 +63,10 @@ class UdpSenderService {
     _timer?.cancel();
   }
 
+  bool isRunning() {
+    return _timer?.isActive ?? false;
+  }
+
   @override
   String toString() {
     return '{IP: $destinationIp, PortNumber: $destinationPortNumber, Rate: $sendingRate Hz}';
