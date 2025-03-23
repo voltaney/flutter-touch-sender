@@ -38,25 +38,25 @@ android {
         }
     }
 
-    flavorDimensions += "default"
-    productFlavors {
-        create("develop") {
-            dimension = "default"
-            resValue(
-                type = "string",
-                name = "app_name",
-                value = "Touch Sender開発")
-            applicationIdSuffix = ".dev"
-        }
-        create("production") {
-            dimension = "default"
-            resValue(
-                type = "string",
-                name = "app_name",
-                value = "Touch Sender")
-            applicationIdSuffix = ".prod"
-        }
-    }
+//    flavorDimensions += "default"
+//    productFlavors {
+//        create("develop") {
+//            dimension = "default"
+//            resValue(
+//                type = "string",
+//                name = "app_name",
+//                value = "Touch Sender開発")
+//            applicationIdSuffix = ".dev"
+//        }
+//        create("production") {
+//            dimension = "default"
+//            resValue(
+//                type = "string",
+//                name = "app_name",
+//                value = "Touch Sender")
+//            applicationIdSuffix = ".prod"
+//        }
+//    }
 }
 
 flutter {
