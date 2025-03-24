@@ -181,6 +181,13 @@ class TouchScreenPage extends HookConsumerWidget {
     final udpSenderServiceRunner = ref.watch(udpSenderServiceRunnerProvider);
 
     useEffect(() {
+      // 最初のフレーム描画後にUDPサービスを自動的に実行させる
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(udpSenderServiceRunnerProvider.notifier).start();
+      });
+      return null;
+    }, []);
+    useEffect(() {
       // この画面にいるときはスリープさせない
       WakelockPlus.enable();
       return WakelockPlus.disable;
