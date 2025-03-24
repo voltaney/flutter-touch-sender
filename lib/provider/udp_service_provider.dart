@@ -6,6 +6,7 @@ import 'package:touch_sender/util/logger.dart';
 
 part 'udp_service_provider.g.dart';
 
+// UdpSenderServiceインスタンスを提供するProvider
 @riverpod
 UdpSenderService udpSenderService(Ref ref) {
   final service = UdpSenderService(
@@ -17,6 +18,38 @@ UdpSenderService udpSenderService(Ref ref) {
     logger.i('UdpSenderServiceProvider disposed');
     service.stop();
   });
-  service.start();
   return service;
+}
+
+// UdpSenderServiceの状態を管理するProvider
+// UdpSenderServiceのTimerは、このProviderを介して操作する。
+@riverpod
+class UdpSenderServiceRunner extends _$UdpSenderServiceRunner {
+  @override
+  FutureOr<UdpSenderServiceState> build() async {
+    ref.onDispose(() => logger.i('UdpSenderServiceRunner disposed'));
+    return await _startService();
+  }
+
+  Future<UdpSenderServiceState> _startService() async {
+    final service = ref.watch(udpSenderServiceProvider);
+    await service.start(
+      onError: (error, stackTrace) {
+        logger.e('timer periodic中の失敗', error: error, stackTrace: stackTrace);
+        state = AsyncValue.error(error, StackTrace.current);
+      },
+    );
+    return service.currentState;
+  }
+
+  Future<void> start() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(_startService);
+  }
+
+  void stop() {
+    final service = ref.watch(udpSenderServiceProvider);
+    service.stop();
+    state = AsyncValue.data(service.currentState);
+  }
 }
