@@ -47,6 +47,7 @@ dependencies:
   intl: any
   stack_trace: ^1.12.1
   wakelock_plus: ^1.2.10
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
