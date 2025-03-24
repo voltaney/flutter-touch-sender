@@ -9,6 +9,8 @@ import 'package:touch_sender/util/logger.dart';
 
 enum UdpSenderServiceState { stopped, running }
 
+final maxIndex = 100000;
+
 class UdpServiceAlreadyRunningError extends Error {
   final String message = 'The UDP service is already running.';
 }
@@ -20,8 +22,9 @@ class UdpSenderService {
   late final Duration sendingRateDuration;
   Timer? _timer;
   final _singleTouch = SingleTouch();
-  int sendingCount = 0;
-  int successCount = 0;
+  int _sendingCount = 0;
+  int _successCount = 0;
+  int _payloadId = 0;
 
   UdpSenderService({
     required this.destinationIp,
@@ -38,7 +41,8 @@ class UdpSenderService {
     _singleTouch.y = y;
   }
 
-  double get successRate => sendingCount == 0 ? 1 : successCount / sendingCount;
+  double get successRate =>
+      _sendingCount == 0 ? 1 : _successCount / _sendingCount;
 
   int get actualSendingRate => (sendingRate * successRate).round();
 
@@ -48,7 +52,7 @@ class UdpSenderService {
       throw UdpServiceAlreadyRunningError();
     }
     // Start sending UDP packets
-    sendingCount = successCount = 0;
+    _payloadId = _sendingCount = _successCount = 0;
     logger.w('送信開始！${toString()}');
     // UDPソケットをバインド
     RawDatagramSocket socket;
@@ -73,6 +77,7 @@ class UdpSenderService {
         final size = view.physicalSize / view.devicePixelRatio;
         logger.i(
           UdpPayload(
+            id: _payloadId,
             deviceInfo: DeviceInfo(
               width: size.width.toInt(),
               height: size.height.toInt(),
@@ -84,6 +89,7 @@ class UdpSenderService {
           const Utf8Codec().encode(
             jsonEncode(
               UdpPayload(
+                id: _payloadId,
                 deviceInfo: DeviceInfo(
                   width: size.width.toInt(),
                   height: size.height.toInt(),
@@ -95,8 +101,9 @@ class UdpSenderService {
           address,
           destinationPortNumber,
         );
-        sendingCount++;
-        successCount += dataSize > 0 ? 1 : 0;
+        _sendingCount++;
+        _successCount += dataSize > 0 ? 1 : 0;
+        _payloadId = (_payloadId + (dataSize > 0 ? 1 : 0)) % maxIndex;
       } catch (e, stackTrace) {
         logger.e('UDP送信中にエラーが発生しました', error: e, stackTrace: stackTrace);
         onError?.call(e, stackTrace);

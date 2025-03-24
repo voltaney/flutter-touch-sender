@@ -7,6 +7,7 @@ part of 'udp_payload.dart';
 // **************************************************************************
 
 UdpPayload _$UdpPayloadFromJson(Map<String, dynamic> json) => UdpPayload(
+  id: (json['id'] as num).toInt(),
   deviceInfo: DeviceInfo.fromJson(json['deviceInfo'] as Map<String, dynamic>),
   singleTouch: SingleTouch.fromJson(
     json['singleTouch'] as Map<String, dynamic>,
@@ -15,6 +16,7 @@ UdpPayload _$UdpPayloadFromJson(Map<String, dynamic> json) => UdpPayload(
 
 Map<String, dynamic> _$UdpPayloadToJson(UdpPayload instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'deviceInfo': instance.deviceInfo.toJson(),
       'singleTouch': instance.singleTouch.toJson(),
     };

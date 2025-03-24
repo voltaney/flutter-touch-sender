@@ -2,12 +2,17 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'udp_payload.g.dart';
 
-@JsonSerializable(explicitToJson: true, createFactory: true, createToJson: true)
+@JsonSerializable(explicitToJson: true)
 class UdpPayload {
+  int id;
   DeviceInfo deviceInfo;
   SingleTouch singleTouch;
 
-  UdpPayload({required this.deviceInfo, required this.singleTouch});
+  UdpPayload({
+    required this.id,
+    required this.deviceInfo,
+    required this.singleTouch,
+  });
   factory UdpPayload.fromJson(Map<String, dynamic> json) =>
       _$UdpPayloadFromJson(json);
   Map<String, dynamic> toJson() => _$UdpPayloadToJson(this);
