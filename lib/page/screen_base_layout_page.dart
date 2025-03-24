@@ -17,6 +17,7 @@ class ScreenBaseLayoutPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(child: navigationShell),
+      extendBody: true,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
@@ -32,12 +33,17 @@ class ScreenBaseLayoutPage extends StatelessWidget {
         currentIndex: navigationShell.currentIndex,
         onTap: (index) => navigationShell.goBranch(index),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go(Routes.touchScreen),
-        shape: const CircleBorder(),
-        child: const Icon(Icons.play_circle_fill, size: 40),
+      floatingActionButton: Container(
+        height: 70,
+        width: 70,
+        margin: const EdgeInsets.only(top: 10),
+        child: FloatingActionButton(
+          onPressed: () => context.go(Routes.touchScreen),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.play_circle, size: 45),
+        ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

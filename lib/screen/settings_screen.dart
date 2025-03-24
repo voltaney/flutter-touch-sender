@@ -17,6 +17,10 @@ class SettingsScreen extends ConsumerWidget {
     return GestureDetector(
       onTap: () => primaryFocus?.unfocus(),
       child: SettingsList(
+        // 親のScaffoldのBottomNavigationBarと被るため、paddingを追加
+        // SettingsList特有のカラーリングのため、こちらで修正
+        // Note: FlutterSettingsUIに頼らずに実装すれば、親WidgetでPadding指定可能
+        contentPadding: const EdgeInsets.only(bottom: 40),
         sections: [
           SettingsSection(
             title: Text(AppLocalizations.of(context)!.network),
