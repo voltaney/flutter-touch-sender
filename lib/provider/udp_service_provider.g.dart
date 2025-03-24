@@ -25,7 +25,7 @@ final udpSenderServiceProvider = AutoDisposeProvider<UdpSenderService>.internal(
 // ignore: unused_element
 typedef UdpSenderServiceRef = AutoDisposeProviderRef<UdpSenderService>;
 String _$udpSenderServiceRunnerHash() =>
-    r'd43a79d16aa52834f9db808686a60d8c04298df6';
+    r'afa16695da6eb107959f8bfc4804acdfd4cd53c8';
 
 /// See also [UdpSenderServiceRunner].
 @ProviderFor(UdpSenderServiceRunner)

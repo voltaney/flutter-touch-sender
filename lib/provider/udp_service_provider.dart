@@ -28,7 +28,7 @@ class UdpSenderServiceRunner extends _$UdpSenderServiceRunner {
   @override
   FutureOr<UdpSenderServiceState> build() async {
     ref.onDispose(() => logger.i('UdpSenderServiceRunner disposed'));
-    return await _startService();
+    return UdpSenderServiceState.stopped;
   }
 
   Future<UdpSenderServiceState> _startService() async {
