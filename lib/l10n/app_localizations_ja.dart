@@ -50,4 +50,25 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get back => '戻る';
+
+  @override
+  String get backToSetting => '設定画面に戻る';
+
+  @override
+  String get errorTitle => 'エラー';
+
+  @override
+  String get udpServiceAlreadyRunningErrorMessage => '内部エラーが発生しました。アプリを再起動して再度お試しください。';
+
+  @override
+  String get ipAddressInvalidErrorMessage => '無効なIPアドレスです。設定を見直してください。';
+
+  @override
+  String get portNumberInvalidErrorMessage => '無効なポート番号です。設定を見直してください。';
+
+  @override
+  String get socketExceptionErrorMessage => 'ネットワークエラーが発生しました。設定を見直すか、アプリを再起動してください。';
+
+  @override
+  String get somethingWentWrongErrorMessage => '未知のエラーが発生しました。アプリを再起動して再度お試しください。';
 }

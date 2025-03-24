@@ -27,5 +27,13 @@
     }
   },
 
-  "back": "戻る"
+  "back": "戻る",
+  "backToSetting": "設定画面に戻る",
+
+  "errorTitle": "エラー",
+  "udpServiceAlreadyRunningErrorMessage": "内部エラーが発生しました。アプリを再起動して再度お試しください。",
+  "ipAddressInvalidErrorMessage": "無効なIPアドレスです。設定を見直してください。",
+  "portNumberInvalidErrorMessage": "無効なポート番号です。設定を見直してください。",
+  "socketExceptionErrorMessage": "ネットワークエラーが発生しました。設定を見直すか、アプリを再起動してください。",
+  "somethingWentWrongErrorMessage": "未知のエラーが発生しました。アプリを再起動して再度お試しください。"
 }

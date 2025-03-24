@@ -96,38 +96,76 @@ class ErrorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     logBuildAction();
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // TODO: ローカライズ
-          Text(
-            'エラーが発生しました。',
-            style: Theme.of(context).primaryTextTheme.displayMedium,
-          ),
-          Text(_getLocalizedErrorMessage(context, error)),
-          ElevatedButton(
-            onPressed: () => context.go(Routes.setting),
-            child: const Text('設定画面に戻る'),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Row(
+                  spacing: 10,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // textBaseline: TextBaseline.ideographic,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 30,
+                      color: Theme.of(context).textTheme.displaySmall!.color,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.errorTitle,
+                      style: const TextStyle(fontSize: 45),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              spacing: 30,
+              children: [
+                Text(_getLocalizedErrorMessage(context, error)),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                  ),
+                  onPressed: () => context.go(Routes.setting),
+                  child: Text(
+                    AppLocalizations.of(context)!.backToSetting,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // TODO: ローカライズ
+  // エラーメッセージをローカライズ
   String _getLocalizedErrorMessage(BuildContext context, Object e) {
     logger.w('エラーテキスト分岐: $e');
-    if (e is UdpServiceAlreadyRunningError) return 'UDPサービスは既に実行中です。';
+    if (e is UdpServiceAlreadyRunningError) {
+      return AppLocalizations.of(context)!.udpServiceAlreadyRunningErrorMessage;
+    }
     if (e is ArgumentError) {
       final message = e.message.toString().toLowerCase();
       if (message.contains('internet address')) {
-        return 'IPアドレスの解決に失敗しました。';
+        return AppLocalizations.of(context)!.ipAddressInvalidErrorMessage;
       } else if (message.contains('port')) {
-        return 'ポート番号が不正です。';
+        return AppLocalizations.of(context)!.portNumberInvalidErrorMessage;
       }
     }
-    if (e is SocketException) return 'ソケットのバインドに失敗しました。';
-    return 'エラーが発生しました。';
+    if (e is SocketException) {
+      return AppLocalizations.of(context)!.socketExceptionErrorMessage;
+    }
+    return AppLocalizations.of(context)!.somethingWentWrongErrorMessage;
   }
 }
 

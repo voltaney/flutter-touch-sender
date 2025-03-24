@@ -27,5 +27,13 @@
       }
   },
 
-  "back": "Back"
+  "back": "Back",
+  "backToSetting": "Back to Setting",
+
+  "errorTitle": "Error",
+  "udpServiceAlreadyRunningErrorMessage": "Something went wrong. Please try again or restart the app.",
+  "ipAddressInvalidErrorMessage": "Invalid IP address. Please check your settings.",
+  "portNumberInvalidErrorMessage": "Invalid port number. Please check your settings.",
+  "socketExceptionErrorMessage": "Network error. Please check your settings or restart the app.",
+  "somethingWentWrongErrorMessage": "Unknown error. Please try again or restart the app."
 }

@@ -50,4 +50,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get back => 'Back';
+
+  @override
+  String get backToSetting => 'Back to Setting';
+
+  @override
+  String get errorTitle => 'Error';
+
+  @override
+  String get udpServiceAlreadyRunningErrorMessage => 'Something went wrong. Please try again or restart the app.';
+
+  @override
+  String get ipAddressInvalidErrorMessage => 'Invalid IP address. Please check your settings.';
+
+  @override
+  String get portNumberInvalidErrorMessage => 'Invalid port number. Please check your settings.';
+
+  @override
+  String get socketExceptionErrorMessage => 'Network error. Please check your settings or restart the app.';
+
+  @override
+  String get somethingWentWrongErrorMessage => 'Unknown error. Please try again or restart the app.';
 }

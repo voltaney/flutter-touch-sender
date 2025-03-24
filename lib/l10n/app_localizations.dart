@@ -160,6 +160,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @backToSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Setting'**
+  String get backToSetting;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorTitle;
+
+  /// No description provided for @udpServiceAlreadyRunningErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again or restart the app.'**
+  String get udpServiceAlreadyRunningErrorMessage;
+
+  /// No description provided for @ipAddressInvalidErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid IP address. Please check your settings.'**
+  String get ipAddressInvalidErrorMessage;
+
+  /// No description provided for @portNumberInvalidErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid port number. Please check your settings.'**
+  String get portNumberInvalidErrorMessage;
+
+  /// No description provided for @socketExceptionErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your settings or restart the app.'**
+  String get socketExceptionErrorMessage;
+
+  /// No description provided for @somethingWentWrongErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error. Please try again or restart the app.'**
+  String get somethingWentWrongErrorMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
