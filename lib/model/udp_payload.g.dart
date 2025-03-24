@@ -22,16 +22,16 @@ Map<String, dynamic> _$UdpPayloadToJson(UdpPayload instance) =>
     };
 
 DeviceInfo _$DeviceInfoFromJson(Map<String, dynamic> json) => DeviceInfo(
-  width: (json['width'] as num?)?.toInt(),
-  height: (json['height'] as num?)?.toInt(),
+  width: (json['width'] as num).toInt(),
+  height: (json['height'] as num).toInt(),
 );
 
 Map<String, dynamic> _$DeviceInfoToJson(DeviceInfo instance) =>
     <String, dynamic>{'width': instance.width, 'height': instance.height};
 
 SingleTouch _$SingleTouchFromJson(Map<String, dynamic> json) => SingleTouch(
-  x: (json['x'] as num?)?.toInt(),
-  y: (json['y'] as num?)?.toInt(),
+  x: (json['x'] as num?)?.toDouble(),
+  y: (json['y'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$SingleTouchToJson(SingleTouch instance) =>

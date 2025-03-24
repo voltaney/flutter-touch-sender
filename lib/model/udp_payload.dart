@@ -20,10 +20,10 @@ class UdpPayload {
 
 @JsonSerializable(explicitToJson: true)
 class DeviceInfo {
-  int? width;
-  int? height;
+  int width;
+  int height;
 
-  DeviceInfo({this.width, this.height});
+  DeviceInfo({required this.width, required this.height});
   factory DeviceInfo.fromJson(Map<String, dynamic> json) =>
       _$DeviceInfoFromJson(json);
   Map<String, dynamic> toJson() => _$DeviceInfoToJson(this);
@@ -31,8 +31,8 @@ class DeviceInfo {
 
 @JsonSerializable(explicitToJson: true)
 class SingleTouch {
-  int? x;
-  int? y;
+  double? x;
+  double? y;
 
   SingleTouch({this.x, this.y});
   factory SingleTouch.fromJson(Map<String, dynamic> json) =>

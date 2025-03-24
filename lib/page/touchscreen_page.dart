@@ -78,8 +78,8 @@ class TouchScreen extends HookConsumerWidget {
           },
           onPointerMove: (event) {
             udpSenderService.setSingleTouchData(
-              x: event.position.dx.toInt(),
-              y: event.position.dy.toInt(),
+              x: event.position.dx,
+              y: event.position.dy,
             );
           },
         ),

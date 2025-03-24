@@ -36,7 +36,7 @@ class UdpSenderService {
     );
   }
 
-  void setSingleTouchData({required int? x, required int? y}) {
+  void setSingleTouchData({required double? x, required double? y}) {
     _singleTouch.x = x;
     _singleTouch.y = y;
   }
