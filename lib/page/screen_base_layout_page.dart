@@ -15,6 +15,7 @@ class ScreenBaseLayoutPage extends StatelessWidget {
     logBuildAction();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(child: navigationShell),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
