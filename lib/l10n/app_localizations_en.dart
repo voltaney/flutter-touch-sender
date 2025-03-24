@@ -31,4 +31,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get darkMode => 'Dark Mode';
+
+  @override
+  String expectedSendingRate(int rate) {
+    final intl.NumberFormat rateNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String rateString = rateNumberFormat.format(rate);
+
+    return 'Expected: $rateString Hz';
+  }
+
+  @override
+  String actualSendingRate(int rate) {
+    final intl.NumberFormat rateNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String rateString = rateNumberFormat.format(rate);
+
+    return 'Actual: $rateString Hz';
+  }
+
+  @override
+  String get back => 'Back';
 }

@@ -6,5 +6,26 @@
   "ipAddress": "IP Address",
   "portNumber": "Port Number",
   "sendingRate": "Sending Rate",
-  "darkMode": "Dark Mode"
+  "darkMode": "Dark Mode",
+
+  "expectedSendingRate": "Expected: {rate} Hz",
+  "@expectedSendingRate": {
+    "placeholders": {
+      "rate": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "actualSendingRate": "Actual: {rate} Hz",
+  "@actualSendingRate": {
+      "placeholders": {
+      "rate": {
+          "type": "int",
+          "format": "decimalPattern"
+      }
+      }
+  },
+
+  "back": "Back"
 }

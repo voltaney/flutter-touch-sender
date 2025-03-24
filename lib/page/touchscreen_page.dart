@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/provider/periodic_update_provider.dart';
 import 'package:touch_sender/provider/udp_service_provider.dart';
 import 'package:touch_sender/router/routes.dart';
@@ -58,10 +59,9 @@ class TouchScreen extends HookConsumerWidget {
                       onPressed: () => context.go(Routes.setting),
                       icon: const Icon(
                         Icons.arrow_circle_left_outlined,
-                        size: 20,
+                        size: TouchScreenPage.iconSize,
                       ),
-                      // TODO: ローカライズ
-                      label: const Text('Back'),
+                      label: Text(AppLocalizations.of(context)!.back),
                     ),
                     ControlButton(currentState: currentState),
                     const UdpServiceIndicator(),
@@ -184,8 +184,14 @@ class UdpServiceIndicator extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Expected: ${sendingRate.value} Hz'),
-        Text('Actual: ${udpSenderService.actualSendingRate} Hz'),
+        Text(
+          AppLocalizations.of(context)!.expectedSendingRate(sendingRate.value),
+        ),
+        Text(
+          AppLocalizations.of(
+            context,
+          )!.actualSendingRate(udpSenderService.actualSendingRate),
+        ),
       ],
     );
   }

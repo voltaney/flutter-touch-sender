@@ -142,6 +142,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dark Mode'**
   String get darkMode;
+
+  /// No description provided for @expectedSendingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected: {rate} Hz'**
+  String expectedSendingRate(int rate);
+
+  /// No description provided for @actualSendingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual: {rate} Hz'**
+  String actualSendingRate(int rate);
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
