@@ -59,11 +59,19 @@ class SettingsScreen extends ConsumerWidget {
 
 class TransmissionRateSlider extends HookConsumerWidget {
   const TransmissionRateSlider({super.key});
+  final double _minSliderValue = 1;
+  final double _maxSliderValue = 1000;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logBuildAction();
     final transmissionRate = useState(ref.watch(sendingRateProvider));
+    if (transmissionRate.value < _minSliderValue) {
+      transmissionRate.value = _minSliderValue.toInt();
+    }
+    if (transmissionRate.value > _maxSliderValue) {
+      transmissionRate.value = _maxSliderValue.toInt();
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,8 +84,8 @@ class TransmissionRateSlider extends HookConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
           ),
           child: Slider(
-            min: 1,
-            max: 1000,
+            min: _minSliderValue,
+            max: _maxSliderValue,
             divisions: 20,
             value: transmissionRate.value.toDouble(),
             label: transmissionRate.value.toString(),
