@@ -74,7 +74,7 @@ class TouchScreen extends HookConsumerWidget {
         Listener(
           behavior: HitTestBehavior.translucent,
           onPointerUp: (_) {
-            udpSenderService.setSingleTouchData(x: null, y: null);
+            udpSenderService.clearSingleTouchData();
           },
           onPointerMove: (event) {
             udpSenderService.setSingleTouchData(

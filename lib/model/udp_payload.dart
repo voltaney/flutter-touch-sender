@@ -6,7 +6,7 @@ part 'udp_payload.g.dart';
 class UdpPayload {
   int id;
   DeviceInfo deviceInfo;
-  SingleTouch singleTouch;
+  SingleTouch? singleTouch;
 
   UdpPayload({
     required this.id,
@@ -31,10 +31,10 @@ class DeviceInfo {
 
 @JsonSerializable(explicitToJson: true)
 class SingleTouch {
-  double? x;
-  double? y;
+  double x;
+  double y;
 
-  SingleTouch({this.x, this.y});
+  SingleTouch({required this.x, required this.y});
   factory SingleTouch.fromJson(Map<String, dynamic> json) =>
       _$SingleTouchFromJson(json);
   Map<String, dynamic> toJson() => _$SingleTouchToJson(this);

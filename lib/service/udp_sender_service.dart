@@ -21,7 +21,7 @@ class UdpSenderService {
   final int sendingRate;
   late final Duration sendingRateDuration;
   Timer? _timer;
-  final _singleTouch = SingleTouch();
+  SingleTouch? _singleTouch;
   int _sendingCount = 0;
   int _successCount = 0;
   int _payloadId = 0;
@@ -36,9 +36,12 @@ class UdpSenderService {
     );
   }
 
-  void setSingleTouchData({required double? x, required double? y}) {
-    _singleTouch.x = x;
-    _singleTouch.y = y;
+  void setSingleTouchData({required double x, required double y}) {
+    _singleTouch = SingleTouch(x: x, y: y);
+  }
+
+  void clearSingleTouchData() {
+    _singleTouch = null;
   }
 
   double get successRate =>
