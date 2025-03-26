@@ -78,16 +78,7 @@ class UdpSenderService {
         // 画面の論理サイズを取得
         final view = WidgetsBinding.instance.platformDispatcher.views.first;
         final size = view.physicalSize / view.devicePixelRatio;
-        logger.i(
-          UdpPayload(
-            id: _payloadId,
-            deviceInfo: DeviceInfo(
-              width: size.width.toInt(),
-              height: size.height.toInt(),
-            ),
-            singleTouch: _singleTouch,
-          ).toJson(),
-        );
+        logger.i('送信$_payloadId');
         final dataSize = socket.send(
           const Utf8Codec().encode(
             jsonEncode(
