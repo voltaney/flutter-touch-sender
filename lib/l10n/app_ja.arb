@@ -8,6 +8,16 @@
   "sendingRate": "送信レート",
   "darkMode": "ダークモード",
 
+  "showSendingRate": "レート: {rate} Hz",
+  "@showSendingRate": {
+      "placeholders": {
+      "rate": {
+          "type": "int",
+          "format": "decimalPattern"
+      }
+      }
+  },
+
   "expectedSendingRate": "期待値: {rate} Hz",
   "@expectedSendingRate": {
     "placeholders": {

@@ -6,30 +6,84 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:touch_sender/l10n/app_localizations.dart';
-import 'package:touch_sender/provider/periodic_update_provider.dart';
+import 'package:touch_sender/model/udp_payload.dart';
+import 'package:touch_sender/provider/settings_provider.dart';
 import 'package:touch_sender/provider/udp_service_provider.dart';
 import 'package:touch_sender/router/routes.dart';
 import 'package:touch_sender/service/udp_sender_service.dart';
 import 'package:touch_sender/util/logger.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+/// タッチスクリーンページ
+class TouchScreenPage extends HookConsumerWidget {
+  const TouchScreenPage({super.key});
+  static const double iconSize = 20;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    logBuildAction();
+    // フルスクリーン
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    final udpSenderServiceWorkerStateManager = ref.watch(
+      udpSenderServiceWorkerStateManagerProvider,
+    );
+
+    useEffect(() {
+      // 最初のフレーム描画後にUDPサービスを自動的に実行させる
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(udpSenderServiceWorkerStateManagerProvider.notifier).start();
+      });
+      return null;
+    }, []);
+    useEffect(() {
+      // この画面にいるときはスリープさせない
+      WakelockPlus.enable();
+      return WakelockPlus.disable;
+    }, []);
+
+    useOnAppLifecycleStateChange((before, current) {
+      // アプリがバックグラウンドに行ったらUDP送信を停止する
+      switch (current) {
+        case AppLifecycleState.inactive:
+          ref.read(udpSenderServiceWorkerStateManagerProvider.notifier).close();
+          break;
+        default:
+          break;
+      }
+    });
+
+    // UdpSenderServiceRunnerの状態によって表示を切り替える
+    return Scaffold(
+      body: switch (udpSenderServiceWorkerStateManager) {
+        AsyncError(:final error) => ErrorScreen(error: error),
+        AsyncData(:final value) => TouchScreen(currentState: value),
+        _ => const CircularProgressIndicator(),
+      },
+    );
+  }
+}
+
+/// タッチスクリーンページ上部に表示する、UDP送信を開始・停止するボタン
 class ControlButton extends ConsumerWidget {
   const ControlButton({super.key, required this.currentState});
-  final UdpSenderServiceState currentState;
+  final UdpSenderServiceWorkerState currentState;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logBuildAction();
     return switch (currentState) {
-      UdpSenderServiceState.running => ElevatedButton(
+      UdpSenderServiceWorkerState.running => ElevatedButton(
         onPressed: () {
-          ref.read(udpSenderServiceRunnerProvider.notifier).stop();
+          ref.read(udpSenderServiceWorkerStateManagerProvider.notifier).close();
         },
         child: const Icon(Icons.stop, size: TouchScreenPage.iconSize),
       ),
-      UdpSenderServiceState.stopped => ElevatedButton(
+      UdpSenderServiceWorkerState.closed ||
+      UdpSenderServiceWorkerState.notStarted => ElevatedButton(
         onPressed: () async {
-          await ref.read(udpSenderServiceRunnerProvider.notifier).start();
+          await ref
+              .read(udpSenderServiceWorkerStateManagerProvider.notifier)
+              .start();
         },
         child: const Icon(Icons.play_arrow, size: TouchScreenPage.iconSize),
       ),
@@ -37,13 +91,16 @@ class ControlButton extends ConsumerWidget {
   }
 }
 
+/// タッチ状況を記録するウィジェット
 class TouchScreen extends HookConsumerWidget {
   const TouchScreen({super.key, required this.currentState});
-  final UdpSenderServiceState currentState;
+  final UdpSenderServiceWorkerState currentState;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logBuildAction();
-    final udpSenderService = ref.watch(udpSenderServiceProvider);
+    final udpSenderServiceWorker = ref.watch(
+      udpSenderServiceWorkerInstanceProvider,
+    );
     return Stack(
       children: [
         SafeArea(
@@ -74,18 +131,16 @@ class TouchScreen extends HookConsumerWidget {
         Listener(
           behavior: HitTestBehavior.translucent,
           onPointerUp: (_) {
-            udpSenderService.clearSingleTouchData();
+            udpSenderServiceWorker?.setSingleTouchData(null);
           },
           onPointerDown: (event) {
-            udpSenderService.setSingleTouchData(
-              x: event.position.dx,
-              y: event.position.dy,
+            udpSenderServiceWorker?.setSingleTouchData(
+              SingleTouch(x: event.position.dx, y: event.position.dy),
             );
           },
           onPointerMove: (event) {
-            udpSenderService.setSingleTouchData(
-              x: event.position.dx,
-              y: event.position.dy,
+            udpSenderServiceWorker?.setSingleTouchData(
+              SingleTouch(x: event.position.dx, y: event.position.dy),
             );
           },
         ),
@@ -94,6 +149,7 @@ class TouchScreen extends HookConsumerWidget {
   }
 }
 
+/// UDP送信でエラーが起きた際に表示される画面
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({super.key, required this.error});
   final Object error;
@@ -156,7 +212,7 @@ class ErrorScreen extends StatelessWidget {
 
   // エラーメッセージをローカライズ
   String _getLocalizedErrorMessage(BuildContext context, Object e) {
-    logger.w('エラーテキスト分岐: $e');
+    logger.e('エラーテキスト分岐', error: e);
     if (e is UdpServiceAlreadyRunningError) {
       return AppLocalizations.of(context)!.udpServiceAlreadyRunningErrorMessage;
     }
@@ -171,79 +227,25 @@ class ErrorScreen extends StatelessWidget {
     if (e is SocketException) {
       return AppLocalizations.of(context)!.socketExceptionErrorMessage;
     }
-    return AppLocalizations.of(context)!.somethingWentWrongErrorMessage;
+    return '${AppLocalizations.of(context)!.somethingWentWrongErrorMessage}\n${e.toString().substring(0, 200)}';
   }
 }
 
-class TouchScreenPage extends HookConsumerWidget {
-  const TouchScreenPage({super.key});
-  static const double iconSize = 20;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    logBuildAction();
-    // フルスクリーン
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    final udpSenderServiceRunner = ref.watch(udpSenderServiceRunnerProvider);
-
-    useEffect(() {
-      // 最初のフレーム描画後にUDPサービスを自動的に実行させる
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(udpSenderServiceRunnerProvider.notifier).start();
-      });
-      return null;
-    }, []);
-    useEffect(() {
-      // この画面にいるときはスリープさせない
-      WakelockPlus.enable();
-      return WakelockPlus.disable;
-    }, []);
-
-    useOnAppLifecycleStateChange((before, current) {
-      // アプリがバックグラウンドに行ったらUDP送信を停止する
-      switch (current) {
-        case AppLifecycleState.inactive:
-          ref.read(udpSenderServiceRunnerProvider.notifier).stop();
-          break;
-        default:
-          break;
-      }
-    });
-
-    // UdpSenderServiceRunnerの状態によって表示を切り替える
-    return Scaffold(
-      body: switch (udpSenderServiceRunner) {
-        AsyncError(:final error) => ErrorScreen(error: error),
-        AsyncData(:final value) => TouchScreen(currentState: value),
-        _ => const CircularProgressIndicator(),
-      },
-    );
-  }
-}
-
+/// UDP送信レートを表示するウィジェット
+///
+/// メインスレッドで[UdpSenderService]を動かしていたときは、
+/// 簡単に実際のレートを取得できたが、今はRemote Isolateで動かしているため、
+/// 設定されたレートを表示するだけにしている。
 class UdpServiceIndicator extends HookConsumerWidget {
   const UdpServiceIndicator({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logBuildAction();
-    final udpSenderService = ref.watch(udpSenderServiceProvider);
     // 1秒ごとに値を更新するためのプロバイダ
+    final sendingRate = ref.read(sendingRateProvider);
     // ignore: unused_local_variable
-    final oneSecondUpdate = ref.watch(oneSecondUpdateProvider);
-    final sendingRate = useState(udpSenderService.sendingRate);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!.expectedSendingRate(sendingRate.value),
-        ),
-        Text(
-          AppLocalizations.of(
-            context,
-          )!.actualSendingRate(udpSenderService.actualSendingRate),
-        ),
-      ],
-    );
+    // final oneSecondUpdate = ref.watch(oneSecondUpdateProvider);
+    return Text(AppLocalizations.of(context)!.showSendingRate(sendingRate));
   }
 }
