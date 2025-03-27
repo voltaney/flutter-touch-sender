@@ -17,91 +17,76 @@ part 'udp_service_provider.g.dart';
 /// ※別スレッドでUDP送信を行うため。
 @riverpod
 UdpSenderService _udpSenderService(Ref ref) {
+  logger.i('[UdpSenderServiceProvider] 生成');
   final service = UdpSenderService(
     destinationIp: ref.read(ipAddressProvider),
     destinationPortNumber: ref.read(portNumberProvider),
     sendingRate: ref.read(sendingRateProvider),
   );
   ref.onDispose(() {
-    logger.i('UdpSenderServiceProvider disposed');
-    service.stop();
+    logger.i('[UdpSenderServiceProvider] Disposed');
+    // service.stop();
   });
   return service;
 }
 
-/// [UdpSenderServiceWorker]のStateプロバイダ
+/// [UdpSenderServiceWorker]のプロバイダ
 ///
-/// 自動生成されたプロバイダに依存するプロバイダも自動生成されているべき、というRiverpodの仕様（警告表示）により、
-/// [StateProvider]による直接的な定義は避けている。
+/// このプロバイダは、[UdpSenderServiceWorker]のインスタンスを生成する。
+/// Dispose時にWorkerがクローズされることを保証する。
 @riverpod
-class UdpSenderServiceWorkerInstance extends _$UdpSenderServiceWorkerInstance {
-  @override
-  UdpSenderServiceWorker? build() {
-    ref.onDispose(() {
-      logger.i('UdpSenderServiceWorkerInstanceProvider disposed');
-      state?.close();
-    });
-    return null;
-  }
+UdpSenderServiceWorker udpSenderServiceWorkerInstance(Ref ref) {
+  logger.i('[udpSenderServiceWorkerInstanceProvider] 生成');
+  final worker = UdpSenderServiceWorker();
+  ref.onDispose(() {
+    logger.i('[udpSenderServiceWorkerInstanceProvider] Disposed');
+    // Providerが破棄されたときに、必ずIsolateを終了させる。
+    worker.close();
+  });
 
-  void set(UdpSenderServiceWorker? worker) {
-    state = worker;
-  }
+  return worker;
 }
 
-/// [UdpSenderServiceWorker]のState
-/// [UdpSenderServiceWorkerStateManagerProvider]で管理される。
-enum UdpSenderServiceWorkerState { notStarted, running, closed }
-
-/// [UdpSenderServiceWorkerState]のStateプロバイダ
+/// [UdpSenderServiceWorker]の状態[IsolateWorkerState]プロバイダ
 ///
-/// 各Widgetはこの[FutureProvider]を介して[UdpSenderServiceWorker]を操作することで、
+/// 各Widgetはこの[AsyncNotifierProvider]を介して[UdpSenderServiceWorker]を操作することで、
 /// [UdpSenderServiceWorkerState]の変化に応じたビルドを実行できる。
 ///
-/// ただし、タッチ状況の設定は[udpSenderServiceWorkerInstanceProvider]を介して行うこと。
+/// タッチ状況の設定は[udpSenderServiceWorkerInstanceProvider]を介して行うこと。
+///
+/// Provider Dependencies:
+/// - [udpSenderServiceWorkerInstanceProvider]
+
 @riverpod
-class UdpSenderServiceWorkerStateManager
-    extends _$UdpSenderServiceWorkerStateManager {
+class UdpSenderServiceWorkerState extends _$UdpSenderServiceWorkerState {
+  late final UdpSenderServiceWorker _worker;
   @override
-  FutureOr<UdpSenderServiceWorkerState> build() {
-    ref.onDispose(
-      () => logger.i('UdpSenderServiceWorkerStateManagerProvider disposed'),
-    );
-    return UdpSenderServiceWorkerState.notStarted;
+  FutureOr<IsolateWorkerState> build() {
+    logger.i('[UdpSenderServiceWorkerStateProvider] 生成');
+    _worker = ref.watch(udpSenderServiceWorkerInstanceProvider);
+    ref.onDispose(() {
+      logger.i('[UdpSenderServiceWorkerStateProvider] disposed');
+    });
+    return _worker.currentState;
   }
 
   Future<void> start() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(_startService);
+    state = await AsyncValue.guard(() async {
+      await _worker.start(
+        service: ref.read(_udpSenderServiceProvider),
+        onRemoteIsolateError: (e) {
+          logger.e('Remote Isolateでエラーが発生しました', error: e);
+          state = AsyncValue.error(e, StackTrace.current);
+        },
+      );
+      return _worker.currentState;
+    });
   }
 
   void close() {
-    ref.read(udpSenderServiceWorkerInstanceProvider)?.close();
-    ref.read(udpSenderServiceWorkerInstanceProvider.notifier).set(null);
-    state = const AsyncValue.data(UdpSenderServiceWorkerState.closed);
-  }
-
-  Future<UdpSenderServiceWorkerState> _startService() async {
-    if (ref.read(udpSenderServiceWorkerInstanceProvider) != null) {
-      throw StateError('Already worker spawned');
-    }
-    final service = ref.read(_udpSenderServiceProvider);
-    logger.i(
-      'udpSenderServiceWorkerStateManagerProviderを介してUdpSenderServiceWorkerを生成します。',
-    );
-    // ここで引き渡したserviceは、Remote Isolateで実行されるため、
-    // このIsolateでのserviceの状態は変わらないことに注意
-    ref
-        .read(udpSenderServiceWorkerInstanceProvider.notifier)
-        .set(
-          await UdpSenderServiceWorker.spawn(
-            service,
-            onError: (error) {
-              logger.e('timer periodic中の失敗', error: error);
-              state = AsyncValue.error(error, StackTrace.current);
-            },
-          ),
-        );
-    return UdpSenderServiceWorkerState.running;
+    state = const AsyncValue.loading();
+    _worker.close();
+    state = AsyncValue.data(_worker.currentState);
   }
 }

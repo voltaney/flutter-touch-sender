@@ -6,8 +6,6 @@ import 'dart:math';
 import 'package:touch_sender/model/udp_payload.dart';
 import 'package:touch_sender/util/logger.dart';
 
-enum UdpSenderServiceState { stopped, running }
-
 final maxIndex = 100000;
 
 class UdpServiceAlreadyRunningError extends Error {
@@ -21,6 +19,7 @@ class UdpSenderService {
   late final Duration sendingRateDuration;
   Timer? _timer;
   SingleTouch? _singleTouch;
+  late DeviceInfo _deviceInfo;
   int _sendingCount = 0;
   int _successCount = 0;
   int _payloadId = 0;
@@ -33,10 +32,15 @@ class UdpSenderService {
     sendingRateDuration = Duration(
       microseconds: (pow(10, 6) / sendingRate).round(),
     );
+    _deviceInfo = DeviceInfo(width: 100, height: 100);
   }
 
   void setSingleTouchData(SingleTouch? touch) {
     _singleTouch = touch;
+  }
+
+  void setDeviceInfo(DeviceInfo deviceInfo) {
+    _deviceInfo = deviceInfo;
   }
 
   double get successRate =>
@@ -45,7 +49,7 @@ class UdpSenderService {
   int get actualSendingRate => (sendingRate * successRate).round();
 
   Future<void> start({Function(Object, StackTrace)? onError}) async {
-    if (currentState == UdpSenderServiceState.running) {
+    if (isRunning()) {
       logger.w('既にUDP送信が開始されています。これは不正な状態です。');
       throw UdpServiceAlreadyRunningError();
     }
@@ -80,13 +84,7 @@ class UdpSenderService {
             jsonEncode(
               UdpPayload(
                 id: _payloadId,
-                deviceInfo: DeviceInfo(
-                  // TODO: 画面の論理サイズをMain Isolateから取得する
-                  // width: size.width.toInt(),
-                  // height: size.height.toInt(),
-                  width: 100,
-                  height: 100,
-                ),
+                deviceInfo: _deviceInfo,
                 singleTouch: _singleTouch,
               ).toJson(),
             ),
@@ -107,14 +105,13 @@ class UdpSenderService {
   }
 
   void stop() {
-    logger.i('Timer.periodicによるUDPの定期送信を停止します。');
+    logger.i('Timer.periodicによるUDPの定期送信を停止します。[タスク状態]:${isRunning()}');
     _timer?.cancel();
   }
 
-  UdpSenderServiceState get currentState =>
-      _timer?.isActive == true
-          ? UdpSenderServiceState.running
-          : UdpSenderServiceState.stopped;
+  bool isRunning() {
+    return _timer?.isActive == true;
+  }
 
   @override
   String toString() {

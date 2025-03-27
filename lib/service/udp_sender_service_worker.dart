@@ -5,21 +5,30 @@ import 'package:touch_sender/model/udp_payload.dart';
 import 'package:touch_sender/service/udp_sender_service.dart';
 import 'package:touch_sender/util/logger.dart';
 
+enum IsolateWorkerState { starting, notStarted, running, closed }
+
+enum DataType { singleTouch, deviceInfo }
+
 /// [UdpSenderService]を**Main isolate**と**Remote isolate**間で強調して実行するWorker。
 ///
 /// Remote isolateにおいて発生した例外はMain isolateに通知される。
 class UdpSenderServiceWorker {
-  bool _closed = false;
-  final SendPort _commands;
-  final ReceivePort _responses;
-  final Function(Object)? _onError;
+  var _state = IsolateWorkerState.notStarted;
+  SendPort? _commands;
+  ReceivePort? _responses;
+  Function(Object)? _onRemoteIsolateError;
 
   /// **Main isolate**
   ///
   /// [SingleTouch]オブジェクトをRemote Isolateに送信する。
   void setSingleTouchData(SingleTouch? touch) {
-    if (_closed) throw StateError('クローズ済みのWorkerでメッセージを送信しようとしました。');
-    _commands.send(touch);
+    if (!isRunning) return;
+    _commands?.send((DataType.singleTouch, touch));
+  }
+
+  void setDeviceInfo(DeviceInfo deviceInfo) {
+    if (!isRunning) return;
+    _commands?.send((DataType.deviceInfo, deviceInfo));
   }
 
   /// **Main Isolate**
@@ -27,15 +36,20 @@ class UdpSenderServiceWorker {
   /// 新しいIsolate（Remote Isolate）を生成し、Isolate間で通信するためのポートを割り当てる。
   /// スポーンされたIsolateでサービス([UdpSenderService])が開始される。
   ///
-  /// [onError]コールバックは、**REMOTE** Isolateでエラーが発生したときに、**MAIN** Isolateで呼び出される。
+  /// [onRemoteIsolateError]コールバックは、**REMOTE** Isolateでエラーが発生したときに、**MAIN** Isolateで呼び出される。
   ///
   /// ```dart
   /// final worker = await UdpSenderServiceWorker.spawn(service, onError: (error)=> print(error));
   /// ```
-  static Future<UdpSenderServiceWorker> spawn(
-    UdpSenderService service, {
-    Function(Object)? onError,
+  Future<void> start({
+    required UdpSenderService service,
+    Function(Object)? onRemoteIsolateError,
   }) async {
+    if (!_canStart) {
+      throw StateError('Isolateが既に起動しています。');
+    }
+    _state = IsolateWorkerState.starting;
+
     final initPort = RawReceivePort();
     final connection = Completer<(ReceivePort, SendPort)>.sync();
     initPort.handler = (message) {
@@ -54,18 +68,20 @@ class UdpSenderServiceWorker {
 
     final (ReceivePort receivePort, SendPort sendPort) =
         await connection.future;
+    _responses = receivePort;
+    _commands = sendPort;
+    _onRemoteIsolateError = onRemoteIsolateError;
 
-    return UdpSenderServiceWorker._(receivePort, sendPort, onError);
+    _responses?.listen(_handleResponsesFromIsolate);
+    _state = IsolateWorkerState.running;
   }
 
-  /// **Main isolate**
-  ///
-  /// プライベートコンストラクタ。[spawn]メソッドから呼び出される。
-  ///
-  /// [responses]ポートと[commands]ポートを登録する。
-  UdpSenderServiceWorker._(this._responses, this._commands, this._onError) {
-    _responses.listen(_handleResponsesFromIsolate);
-  }
+  bool get isRunning => _state == IsolateWorkerState.running;
+
+  IsolateWorkerState get currentState => _state;
+  bool get _canStart =>
+      _state == IsolateWorkerState.notStarted ||
+      _state == IsolateWorkerState.closed;
 
   /// **Main isolate**
   ///
@@ -74,7 +90,7 @@ class UdpSenderServiceWorker {
   void _handleResponsesFromIsolate(dynamic message) {
     if (message is Error || message is Exception) {
       close();
-      _onError?.call(message);
+      _onRemoteIsolateError?.call(message);
     } else {
       throw StateError('Remote Isolateからの不正なメッセージ: $message');
     }
@@ -104,8 +120,15 @@ class UdpSenderServiceWorker {
         Isolate.current.kill();
         return;
       }
-      final touch = message as SingleTouch?;
-      service.setSingleTouchData(touch);
+      final (DataType t, dynamic data) = message;
+      switch (t) {
+        case DataType.singleTouch:
+          service.setSingleTouchData(data);
+          break;
+        case DataType.deviceInfo:
+          service.setDeviceInfo(data);
+          break;
+      }
     });
   }
 
@@ -139,14 +162,11 @@ class UdpSenderServiceWorker {
   ///
   /// Remote Isolateにシャットダウン命令を送信し、[ReceivePort]をクローズする。
   void close() {
-    if (!_closed) {
+    if (isRunning) {
       logger.i('Remote isolateにシャットダウン命令＆Main Isolateのポートクローズ');
-      _closed = true;
-      _commands.send('shutdown');
-      _responses.close();
+      _commands?.send('shutdown');
+      _responses?.close();
+      _state = IsolateWorkerState.closed;
     }
   }
-
-  /// Workerがクローズされているかどうかを返す。
-  bool get isClosed => _closed;
 }

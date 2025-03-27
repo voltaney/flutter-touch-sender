@@ -6,7 +6,7 @@ part of 'udp_service_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$udpSenderServiceHash() => r'b66cd6d2e616570a27d4c9dfebfee5c4a3992228';
+String _$udpSenderServiceHash() => r'69de85c0fc09f6f88aa0ca4c4a401a1a51bbc31d';
 
 /// [UdpSenderService]のプロバイダ
 ///
@@ -35,59 +35,61 @@ final _udpSenderServiceProvider =
 // ignore: unused_element
 typedef _UdpSenderServiceRef = AutoDisposeProviderRef<UdpSenderService>;
 String _$udpSenderServiceWorkerInstanceHash() =>
-    r'532b18d967594d68be3fa1b31bcd874173938795';
+    r'4421667390812c3b7b3183528e6e4a5d66eecf32';
 
-/// [UdpSenderServiceWorker]のStateプロバイダ
+/// [UdpSenderServiceWorker]のプロバイダ
 ///
-/// 自動生成されたプロバイダに依存するプロバイダも自動生成されているべき、というRiverpodの仕様（警告表示）により、
-/// [StateProvider]による直接的な定義は避けている。
+/// このプロバイダは、[UdpSenderServiceWorker]のインスタンスを生成する。
+/// Dispose時にWorkerがクローズされることを保証する。
 ///
-/// Copied from [UdpSenderServiceWorkerInstance].
-@ProviderFor(UdpSenderServiceWorkerInstance)
-final udpSenderServiceWorkerInstanceProvider = AutoDisposeNotifierProvider<
-  UdpSenderServiceWorkerInstance,
-  UdpSenderServiceWorker?
->.internal(
-  UdpSenderServiceWorkerInstance.new,
-  name: r'udpSenderServiceWorkerInstanceProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$udpSenderServiceWorkerInstanceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$UdpSenderServiceWorkerInstance =
-    AutoDisposeNotifier<UdpSenderServiceWorker?>;
-String _$udpSenderServiceWorkerStateManagerHash() =>
-    r'2380d007af24e19667d0c6554dc22472ad95df6a';
-
-/// [UdpSenderServiceWorkerState]のStateプロバイダ
-///
-/// 各Widgetはこの[FutureProvider]を介して[UdpSenderServiceWorker]を操作することで、
-/// [UdpSenderServiceWorkerState]の変化に応じたビルドを実行できる。
-///
-/// ただし、タッチ状況の設定は[udpSenderServiceWorkerInstanceProvider]を介して行うこと。
-///
-/// Copied from [UdpSenderServiceWorkerStateManager].
-@ProviderFor(UdpSenderServiceWorkerStateManager)
-final udpSenderServiceWorkerStateManagerProvider =
-    AutoDisposeAsyncNotifierProvider<
-      UdpSenderServiceWorkerStateManager,
-      UdpSenderServiceWorkerState
-    >.internal(
-      UdpSenderServiceWorkerStateManager.new,
-      name: r'udpSenderServiceWorkerStateManagerProvider',
+/// Copied from [udpSenderServiceWorkerInstance].
+@ProviderFor(udpSenderServiceWorkerInstance)
+final udpSenderServiceWorkerInstanceProvider =
+    AutoDisposeProvider<UdpSenderServiceWorker>.internal(
+      udpSenderServiceWorkerInstance,
+      name: r'udpSenderServiceWorkerInstanceProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$udpSenderServiceWorkerStateManagerHash,
+              : _$udpSenderServiceWorkerInstanceHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$UdpSenderServiceWorkerStateManager =
-    AutoDisposeAsyncNotifier<UdpSenderServiceWorkerState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UdpSenderServiceWorkerInstanceRef =
+    AutoDisposeProviderRef<UdpSenderServiceWorker>;
+String _$udpSenderServiceWorkerStateHash() =>
+    r'da41509e18aeefd8fa215140b0981c5c84152ce7';
+
+/// [UdpSenderServiceWorker]の状態[IsolateWorkerState]プロバイダ
+///
+/// 各Widgetはこの[AsyncNotifierProvider]を介して[UdpSenderServiceWorker]を操作することで、
+/// [UdpSenderServiceWorkerState]の変化に応じたビルドを実行できる。
+///
+/// タッチ状況の設定は[udpSenderServiceWorkerInstanceProvider]を介して行うこと。
+///
+/// Provider Dependencies:
+/// - [udpSenderServiceWorkerInstanceProvider]
+///
+/// Copied from [UdpSenderServiceWorkerState].
+@ProviderFor(UdpSenderServiceWorkerState)
+final udpSenderServiceWorkerStateProvider = AutoDisposeAsyncNotifierProvider<
+  UdpSenderServiceWorkerState,
+  IsolateWorkerState
+>.internal(
+  UdpSenderServiceWorkerState.new,
+  name: r'udpSenderServiceWorkerStateProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$udpSenderServiceWorkerStateHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UdpSenderServiceWorkerState =
+    AutoDisposeAsyncNotifier<IsolateWorkerState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
