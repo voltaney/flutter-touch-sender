@@ -143,6 +143,12 @@ abstract class AppLocalizations {
   /// **'Dark Mode'**
   String get darkMode;
 
+  /// No description provided for @showSendingRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate: {rate} Hz'**
+  String showSendingRate(int rate);
+
   /// No description provided for @expectedSendingRate.
   ///
   /// In en, this message translates to:

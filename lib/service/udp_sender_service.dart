@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:touch_sender/model/udp_payload.dart';
 import 'package:touch_sender/util/logger.dart';
-
-enum UdpSenderServiceState { stopped, running }
 
 final maxIndex = 100000;
 
@@ -22,6 +19,7 @@ class UdpSenderService {
   late final Duration sendingRateDuration;
   Timer? _timer;
   SingleTouch? _singleTouch;
+  late DeviceInfo _deviceInfo;
   int _sendingCount = 0;
   int _successCount = 0;
   int _payloadId = 0;
@@ -34,14 +32,15 @@ class UdpSenderService {
     sendingRateDuration = Duration(
       microseconds: (pow(10, 6) / sendingRate).round(),
     );
+    _deviceInfo = DeviceInfo(width: 100, height: 100);
   }
 
-  void setSingleTouchData({required double x, required double y}) {
-    _singleTouch = SingleTouch(x: x, y: y);
+  void setSingleTouchData(SingleTouch? touch) {
+    _singleTouch = touch;
   }
 
-  void clearSingleTouchData() {
-    _singleTouch = null;
+  void setDeviceInfo(DeviceInfo deviceInfo) {
+    _deviceInfo = deviceInfo;
   }
 
   double get successRate =>
@@ -50,13 +49,13 @@ class UdpSenderService {
   int get actualSendingRate => (sendingRate * successRate).round();
 
   Future<void> start({Function(Object, StackTrace)? onError}) async {
-    if (currentState == UdpSenderServiceState.running) {
+    if (isRunning()) {
       logger.w('既にUDP送信が開始されています。これは不正な状態です。');
       throw UdpServiceAlreadyRunningError();
     }
-    // Start sending UDP packets
+
+    logger.i('UDP通信で使用するソケットを準備します。');
     _payloadId = _sendingCount = _successCount = 0;
-    logger.w('送信開始！${toString()}');
     // UDPソケットをバインド
     RawDatagramSocket socket;
     InternetAddress address;
@@ -73,21 +72,19 @@ class UdpSenderService {
       logger.e('ソケットのバインドに失敗しました', error: e);
       rethrow;
     }
+    logger.i('Timer.periodicによるUDPの定期送信を開始します。');
     _timer = Timer.periodic(sendingRateDuration, (timer) {
       try {
         // 画面の論理サイズを取得
-        final view = WidgetsBinding.instance.platformDispatcher.views.first;
-        final size = view.physicalSize / view.devicePixelRatio;
-        logger.i('送信$_payloadId');
+        // final view = WidgetsBinding.instance.platformDispatcher.views.first;
+        // final size = view.physicalSize / view.devicePixelRatio;
+        logger.d('UDP送信$_payloadId');
         final dataSize = socket.send(
           const Utf8Codec().encode(
             jsonEncode(
               UdpPayload(
                 id: _payloadId,
-                deviceInfo: DeviceInfo(
-                  width: size.width.toInt(),
-                  height: size.height.toInt(),
-                ),
+                deviceInfo: _deviceInfo,
                 singleTouch: _singleTouch,
               ).toJson(),
             ),
@@ -97,25 +94,24 @@ class UdpSenderService {
         );
         _sendingCount++;
         _successCount += dataSize > 0 ? 1 : 0;
+        // 送信IDを更新。最大値に達したら0に戻す。
         _payloadId = (_payloadId + (dataSize > 0 ? 1 : 0)) % maxIndex;
       } catch (e, stackTrace) {
         logger.e('UDP送信中にエラーが発生しました', error: e, stackTrace: stackTrace);
-        onError?.call(e, stackTrace);
         timer.cancel();
+        onError?.call(e, stackTrace);
       }
     });
   }
 
   void stop() {
-    // Stop sending UDP packets
-    logger.i('送信停止！');
+    logger.i('Timer.periodicによるUDPの定期送信を停止します。[タスク状態]:${isRunning()}');
     _timer?.cancel();
   }
 
-  UdpSenderServiceState get currentState =>
-      _timer?.isActive == true
-          ? UdpSenderServiceState.running
-          : UdpSenderServiceState.stopped;
+  bool isRunning() {
+    return _timer?.isActive == true;
+  }
 
   @override
   String toString() {

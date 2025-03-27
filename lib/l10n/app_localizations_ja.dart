@@ -33,6 +33,14 @@ class AppLocalizationsJa extends AppLocalizations {
   String get darkMode => 'ダークモード';
 
   @override
+  String showSendingRate(int rate) {
+    final intl.NumberFormat rateNumberFormat = intl.NumberFormat.decimalPattern(localeName);
+    final String rateString = rateNumberFormat.format(rate);
+
+    return 'レート: $rateString Hz';
+  }
+
+  @override
   String expectedSendingRate(int rate) {
     final intl.NumberFormat rateNumberFormat = intl.NumberFormat.decimalPattern(localeName);
     final String rateString = rateNumberFormat.format(rate);
