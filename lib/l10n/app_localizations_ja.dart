@@ -79,4 +79,34 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get somethingWentWrongErrorMessage => '未知のエラーが発生しました。アプリを再起動して再度お試しください。';
+
+  @override
+  String get pcSetup => 'PC側のセットアップ';
+
+  @override
+  String get pcSetupDescription1 => 'Windowsストアで「TouchSenderタブレット」をインストール';
+
+  @override
+  String get pcSetupDescription2 => 'PCアプリと本アプリのIPアドレス・ポート番号を合わせて設定';
+
+  @override
+  String get pcSetupDescription3 => 'PCアプリと本アプリをそれぞれ開始する（順不同）';
+
+  @override
+  String get touchScreenRotation => '回転可能なタッチ画面';
+
+  @override
+  String get touchScreenRotationDescription => '画面の向きに合わせて、マウスカーソルの動く向きも自動的に変わります。';
+
+  @override
+  String get sensitivitySetting => 'マウス感度';
+
+  @override
+  String get sensitivitySettingDescription => 'PCアプリのメイン画面で、縦方向・横方向の感度を設定可能です。';
+
+  @override
+  String get sendingRateSetting => '送信レート';
+
+  @override
+  String get sendingRateSettingDescription => 'スマホのタッチサンプリングレートが高い場合は、本アプリの送信レートを上げることで、よりスムーズな入力が期待できます。';
 }

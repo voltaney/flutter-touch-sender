@@ -45,5 +45,19 @@
   "ipAddressInvalidErrorMessage": "無効なIPアドレスです。設定を見直してください。",
   "portNumberInvalidErrorMessage": "無効なポート番号です。設定を見直してください。",
   "socketExceptionErrorMessage": "ネットワークエラーが発生しました。設定を見直すか、アプリを再起動してください。",
-  "somethingWentWrongErrorMessage": "未知のエラーが発生しました。アプリを再起動して再度お試しください。"
+  "somethingWentWrongErrorMessage": "未知のエラーが発生しました。アプリを再起動して再度お試しください。",
+
+  "pcSetup": "PC側のセットアップ",
+  "pcSetupDescription1": "Windowsストアで「TouchSenderタブレット」をインストール",
+  "pcSetupDescription2": "PCアプリと本アプリのIPアドレス・ポート番号を合わせて設定",
+  "pcSetupDescription3": "PCアプリと本アプリをそれぞれ開始する（順不同）",
+
+  "touchScreenRotation": "回転可能なタッチ画面",
+  "touchScreenRotationDescription": "画面の向きに合わせて、マウスカーソルの動く向きも自動的に変わります。",
+
+  "sensitivitySetting": "マウス感度",
+  "sensitivitySettingDescription": "PCアプリのメイン画面で、縦方向・横方向の感度を設定可能です。",
+
+  "sendingRateSetting": "送信レート",
+  "sendingRateSettingDescription": "スマホのタッチサンプリングレートが高い場合は、本アプリの送信レートを上げることで、よりスムーズな入力が期待できます。"
 }

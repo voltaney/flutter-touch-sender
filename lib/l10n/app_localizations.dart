@@ -208,6 +208,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown error. Please try again or restart the app.'**
   String get somethingWentWrongErrorMessage;
+
+  /// No description provided for @pcSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'PC Setup'**
+  String get pcSetup;
+
+  /// No description provided for @pcSetupDescription1.
+  ///
+  /// In en, this message translates to:
+  /// **'Install \"TouchSender Tablet\" from the Windows Store'**
+  String get pcSetupDescription1;
+
+  /// No description provided for @pcSetupDescription2.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the same IP address and port number for both the PC app and this app'**
+  String get pcSetupDescription2;
+
+  /// No description provided for @pcSetupDescription3.
+  ///
+  /// In en, this message translates to:
+  /// **'Start both the PC app and this app (order does not matter)'**
+  String get pcSetupDescription3;
+
+  /// No description provided for @touchScreenRotation.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotatable touch screen'**
+  String get touchScreenRotation;
+
+  /// No description provided for @touchScreenRotationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The direction of the mouse movement will automatically change according to the orientation of the screen.'**
+  String get touchScreenRotationDescription;
+
+  /// No description provided for @sensitivitySetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Mouse sensitivity'**
+  String get sensitivitySetting;
+
+  /// No description provided for @sensitivitySettingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You can set mouse sensitivities on the main screen of the PC app.'**
+  String get sensitivitySettingDescription;
+
+  /// No description provided for @sendingRateSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending rate'**
+  String get sendingRateSetting;
+
+  /// No description provided for @sendingRateSettingDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'If your mobile device has a high touch sampling rate, increasing the app\'s sending rate can provide a smoother input experience.'**
+  String get sendingRateSettingDescription;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -79,4 +79,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrongErrorMessage => 'Unknown error. Please try again or restart the app.';
+
+  @override
+  String get pcSetup => 'PC Setup';
+
+  @override
+  String get pcSetupDescription1 => 'Install \"TouchSender Tablet\" from the Windows Store';
+
+  @override
+  String get pcSetupDescription2 => 'Set the same IP address and port number for both the PC app and this app';
+
+  @override
+  String get pcSetupDescription3 => 'Start both the PC app and this app (order does not matter)';
+
+  @override
+  String get touchScreenRotation => 'Rotatable touch screen';
+
+  @override
+  String get touchScreenRotationDescription => 'The direction of the mouse movement will automatically change according to the orientation of the screen.';
+
+  @override
+  String get sensitivitySetting => 'Mouse sensitivity';
+
+  @override
+  String get sensitivitySettingDescription => 'You can set mouse sensitivities on the main screen of the PC app.';
+
+  @override
+  String get sendingRateSetting => 'Sending rate';
+
+  @override
+  String get sendingRateSettingDescription => 'If your mobile device has a high touch sampling rate, increasing the app\'s sending rate can provide a smoother input experience.';
 }
