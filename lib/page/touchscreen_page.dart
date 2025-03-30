@@ -49,7 +49,7 @@ class TouchScreenPage extends HookConsumerWidget {
       body: switch (udpSenderServiceWorkerState) {
         AsyncError(:final error) => ErrorScreen(error: error),
         AsyncData(:final value) => TouchScreen(currentState: value),
-        _ => const CircularProgressIndicator(),
+        _ => const Center(child: CircularProgressIndicator()),
       },
     );
   }
