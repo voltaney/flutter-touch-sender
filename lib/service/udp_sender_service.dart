@@ -19,7 +19,7 @@ class UdpSenderService {
   late final Duration sendingRateDuration;
   Timer? _timer;
   SingleTouch? _singleTouch;
-  late DeviceInfo _deviceInfo;
+  DeviceInfo? _deviceInfo;
   int _sendingCount = 0;
   int _successCount = 0;
   int _payloadId = 0;
@@ -32,7 +32,6 @@ class UdpSenderService {
     sendingRateDuration = Duration(
       microseconds: (pow(10, 6) / sendingRate).round(),
     );
-    _deviceInfo = DeviceInfo(width: 100, height: 100);
   }
 
   void setSingleTouchData(SingleTouch? touch) {
@@ -78,13 +77,18 @@ class UdpSenderService {
         // 画面の論理サイズを取得
         // final view = WidgetsBinding.instance.platformDispatcher.views.first;
         // final size = view.physicalSize / view.devicePixelRatio;
-        logger.d('UDP送信$_payloadId');
+        if (_deviceInfo == null) {
+          logger.d('デバイス情報が設定されていません。');
+          return;
+        } else {
+          logger.d('UDP送信$_payloadId');
+        }
         final dataSize = socket.send(
           const Utf8Codec().encode(
             jsonEncode(
               UdpPayload(
                 id: _payloadId,
-                deviceInfo: _deviceInfo,
+                deviceInfo: _deviceInfo!,
                 singleTouch: _singleTouch,
               ).toJson(),
             ),
