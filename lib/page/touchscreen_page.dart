@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:touch_sender/page/touchscreen_page_screens/error_screen.dart';
+import 'package:touch_sender/page/touchscreen_page_screens/loading_screen.dart';
 import 'package:touch_sender/page/touchscreen_page_screens/touch_screen.dart';
 import 'package:touch_sender/provider/udp_service_provider.dart';
 import 'package:touch_sender/util/logger.dart';
@@ -49,7 +50,7 @@ class TouchScreenPage extends HookConsumerWidget {
       body: switch (udpSenderServiceWorkerState) {
         AsyncError(:final error) => ErrorScreen(error: error),
         AsyncData(:final value) => TouchScreen(currentState: value),
-        _ => const Center(child: CircularProgressIndicator()),
+        _ => const LoadingScreen(),
       },
     );
   }

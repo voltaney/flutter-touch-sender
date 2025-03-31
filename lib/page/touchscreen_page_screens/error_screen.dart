@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/router/routes.dart';
@@ -15,6 +16,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logBuildAction();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
