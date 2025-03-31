@@ -132,6 +132,7 @@ class OrientationListener extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logBuildAction();
+    ref.watch(udpSenderServiceWorkerStateProvider);
     return OrientationBuilder(
       builder: (context, orientation) {
         logger.i('Orientation: $orientation');
