@@ -5,7 +5,7 @@ part 'settings_provider.g.dart';
 
 @riverpod
 class IpAddress extends _$IpAddress {
-  static const initialValue = '192.168.1.15';
+  static const initialValue = '192.168.0.15';
   @override
   String build() {
     final preferences = ref.watch(sharedPreferencesProvider);
@@ -59,7 +59,7 @@ class PortNumber extends _$PortNumber {
 
 @riverpod
 class SendingRate extends _$SendingRate {
-  static const initialValue = 100;
+  static const initialValue = 1000;
 
   @override
   int build() {
