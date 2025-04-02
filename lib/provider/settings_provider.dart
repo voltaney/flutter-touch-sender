@@ -59,7 +59,7 @@ class PortNumber extends _$PortNumber {
 
 @riverpod
 class SendingRate extends _$SendingRate {
-  static const initialValue = 1000;
+  static const initialValue = 800;
 
   @override
   int build() {

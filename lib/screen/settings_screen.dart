@@ -64,7 +64,7 @@ class SettingsScreen extends ConsumerWidget {
 class TransmissionRateSlider extends HookConsumerWidget {
   const TransmissionRateSlider({super.key});
   final double _minSliderValue = 1;
-  final double _maxSliderValue = 1500;
+  final double _maxSliderValue = 1000;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,7 +90,7 @@ class TransmissionRateSlider extends HookConsumerWidget {
           child: Slider(
             min: _minSliderValue,
             max: _maxSliderValue,
-            divisions: 30,
+            divisions: 20,
             value: transmissionRate.value.toDouble(),
             label: transmissionRate.value.toString(),
             onChanged: (value) {
