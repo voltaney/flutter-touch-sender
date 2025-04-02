@@ -5,8 +5,8 @@ import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/router/routes.dart';
 import 'package:touch_sender/util/logger.dart';
 
-class ScreenBaseLayoutPage extends StatelessWidget {
-  const ScreenBaseLayoutPage({super.key, required this.navigationShell});
+class MainScreenBaseLayoutPage extends StatelessWidget {
+  const MainScreenBaseLayoutPage({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
