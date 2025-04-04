@@ -1,0 +1,31 @@
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  create_release:
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'releases/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: get version from pubspec.yaml
+        run: |
+          echo "RESOLVED_VERSION=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' pubspec.yaml)" >> $GITHUB_ENV
+
+      - uses: release-drafter/release-drafter@v6
+        with:
+          tag: v${{ env.RESOLVED_VERSION }}
+          name: v${{ env.RESOLVED_VERSION }}
+          version: ${{ env.RESOLVED_VERSION }}
+          publish: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
