@@ -1,4 +1,4 @@
-name: deliver
+name: Deliver
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
         env:
           ANDROID_KEY_JKS_BASE64: ${{ secrets.ANDROID_KEY_JKS_BASE64 }}
         run: |
-          echo $ANDROID_KEY_JKS_BASE64 | base64 --decode > android/app/upload.jks
+          echo -n $ANDROID_KEY_JKS_BASE64 | base64 --decode > android/app/upload.jks
 
       - name: Create key.properties file
         env:
