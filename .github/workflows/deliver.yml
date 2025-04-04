@@ -1,0 +1,57 @@
+name: deliver
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  APP_NAME: TouchSender
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create keystore file
+        env:
+          ANDROID_KEY_JKS_BASE64: ${{ secrets.ANDROID_KEY_JKS_BASE64 }}
+        run: |
+          echo $ANDROID_KEY_JKS_BASE64 | base64 --decode > android/app/upload.jks
+
+      - name: Create key.properties file
+        env:
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+        run: |
+          echo "storeFile=./upload.jks" > android/key.properties
+          echo "storePassword=$ANDROID_STORE_PASSWORD" >> android/key.properties
+          echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/key.properties
+          echo "keyAlias=$ANDROID_KEY_ALIAS" >> android/key.properties
+
+      - name: get version from pubspec.yaml
+        run: |
+          echo "RESOLVED_VERSION=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' pubspec.yaml)" >> $GITHUB_ENV
+
+      - name: Setup Flutter
+        uses: ./.github/actions/setup-flutter
+
+      - name: Build apk
+        run: |
+          echo "APK_NAME=${APP_NAME}_${{ env.RESOLVED_VERSION }}.apk" >> $GITHUB_ENV
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}
+
+      - name: Upload to release note
+        run: |
+          gh release upload v${{ env.RESOLVED_VERSION }} \
+              build/app/outputs/flutter-apk/${{ env.APK_NAME }} \
+              --clobber \
