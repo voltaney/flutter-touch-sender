@@ -1,0 +1,60 @@
+name: bump pull request
+
+on:
+  workflow_dispatch:
+
+env:
+  GIT_USER_EMAIL: '41898282+github-actions[bot]@users.noreply.github.com'
+  GIT_USER_NAME: 'github-actions[bot]'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: ./.github/actions/setup-flutter
+
+      - name: init git config
+        run: |
+          git config --local user.name $GIT_USER_NAME
+          git config --local user.email $GIT_USER_EMAIL
+
+      - uses: release-drafter/release-drafter@v6
+        id: release_drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get resolved version
+        run: |
+          echo "RESOLVED_VERSION=${{ steps.release_drafter.outputs.resolved_version }}" >> $GITHUB_ENV
+
+      - name: Update version in pubspec.yaml
+        run: |
+          flutter pub run cider version ${{ env.RESOLVED_VERSION }}
+
+      - name: commit pubspec.yaml
+        run: |
+          git add -u pubspec.yaml
+
+      - name: create releaser branch
+        run: |
+          git checkout -b releases/${{ env.RESOLVED_VERSION }}
+          echo "RELEASE_BRANCH=releases/${{ env.RESOLVED_VERSION }}" >> $GITHUB_ENV
+
+      - name: push branch
+        run: |
+          git push -u origin ${{ env.RELEASE_BRANCH }}
+
+      - name: create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create -B main -t "Release ${{ env.RESOLVED_VERSION }}" -b "Release ${{ env.RESOLVED_VERSION }}" --head ${{ env.RELEASE_BRANCH }}
