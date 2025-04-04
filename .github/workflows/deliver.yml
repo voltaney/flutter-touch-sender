@@ -37,10 +37,13 @@ jobs:
           echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/key.properties
           echo "keyAlias=$ANDROID_KEY_ALIAS" >> android/key.properties
 
-      - name: get version from pubspec.yaml
+      - name: Get version from pubspec.yaml
         run: |
           echo "RESOLVED_VERSION=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' pubspec.yaml)" >> $GITHUB_ENV
-          echo "APK_NAME=${{ env.APP_NAME }}_${{ env.RESOLVED_VERSION }}.apk" >> $GITHUB_ENV
+
+      - name: Set APK name
+        run: |
+          echo "APK_NAME=${{ env.APP_NAME }}-${{ env.RESOLVED_VERSION }}.apk" >> $GITHUB_ENV
 
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
@@ -48,10 +51,12 @@ jobs:
       - name: Build apk
         run: |
           flutter build apk --release
-          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}
 
       - name: Upload to release note
         run: |
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}
           gh release upload v${{ env.RESOLVED_VERSION }} \
               build/app/outputs/flutter-apk/${{ env.APK_NAME }} \
               --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
