@@ -46,9 +46,9 @@ jobs:
 
       - name: Build apk
         run: |
-          echo "APK_NAME=${APP_NAME}_${{ env.RESOLVED_VERSION }}.apk" >> $GITHUB_ENV
+          APK_NAME="${APP_NAME}_${{ env.RESOLVED_VERSION }}.apk"
           flutter build apk --release
-          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APK_NAME}
 
       - name: Upload to release note
         run: |
