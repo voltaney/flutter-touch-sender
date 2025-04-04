@@ -40,18 +40,18 @@ jobs:
       - name: get version from pubspec.yaml
         run: |
           echo "RESOLVED_VERSION=$(sed -n 's/^version: *\([^ ]*\) *$/\1/p' pubspec.yaml)" >> $GITHUB_ENV
+          echo "APK_NAME=${{ env.APP_NAME }}_${{ env.RESOLVED_VERSION }}.apk" >> $GITHUB_ENV
 
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
 
       - name: Build apk
         run: |
-          APK_NAME="${{ env.APP_NAME }}_${{ env.RESOLVED_VERSION }}.apk"
           flutter build apk --release
-          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APK_NAME}
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}
 
       - name: Upload to release note
         run: |
           gh release upload v${{ env.RESOLVED_VERSION }} \
               build/app/outputs/flutter-apk/${{ env.APK_NAME }} \
-              --clobber \
+              --clobber
