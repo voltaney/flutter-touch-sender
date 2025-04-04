@@ -1,4 +1,4 @@
-name: Create Release When Merged
+name: Create release and tag when merged
 
 on:
   pull_request:
