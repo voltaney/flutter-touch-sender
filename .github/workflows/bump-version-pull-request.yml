@@ -1,4 +1,4 @@
-name: Bump new version and create pull request
+name: Bump new version
 
 on:
   workflow_dispatch:
@@ -43,6 +43,7 @@ jobs:
       - name: commit pubspec.yaml
         run: |
           git add -u pubspec.yaml
+          echo "Bumped version number to ${{ env.RESOLVED_VERSION }}" | git commit --file=-
 
       - name: create releaser branch
         run: |
