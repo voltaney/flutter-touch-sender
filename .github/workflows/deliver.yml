@@ -46,7 +46,7 @@ jobs:
 
       - name: Build apk
         run: |
-          APK_NAME="${APP_NAME}_${{ env.RESOLVED_VERSION }}.apk"
+          APK_NAME="${{ env.APP_NAME }}_${{ env.RESOLVED_VERSION }}.apk"
           flutter build apk --release
           mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${APK_NAME}
 
