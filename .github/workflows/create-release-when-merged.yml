@@ -31,7 +31,7 @@ jobs:
       - uses: release-drafter/release-drafter@v6
         with:
           tag: v${{ env.RESOLVED_VERSION }}
-          name: v${{ env.RESOLVED_VERSION }}
+          name: v${{ env.RESOLVED_VERSION }} 🌈
           version: ${{ env.RESOLVED_VERSION }}
           publish: true
         env:
