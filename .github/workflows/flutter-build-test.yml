@@ -11,6 +11,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Arrange keystore file
+        uses: ./.github/actions/arrange-keystore-file
+
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
 
