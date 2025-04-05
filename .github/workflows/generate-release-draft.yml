@@ -1,4 +1,4 @@
-name: Generate release draft & Autolabel pull requests
+name: Generate release draft and label PRs
 
 on:
   push:
