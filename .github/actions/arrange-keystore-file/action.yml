@@ -21,7 +21,7 @@ runs:
       env:
         ANDROID_KEY_JKS_BASE64: ${{ inputs.jks_base64 }}
       run: |
-        echo -n $ANDROID_KEY_JKS_BASE64 | base64 --decode > android/app/upload.jks
+        echo -n $ANDROID_KEY_JKS_BASE64 | base64 --decode > android/app/keystore.jks
       shell: bash
 
     - name: Create key.properties file
@@ -30,7 +30,7 @@ runs:
         ANDROID_KEY_ALIAS: ${{ inputs.key_alias }}
         ANDROID_STORE_PASSWORD: ${{ inputs.store_password }}
       run: |
-        echo "storeFile=./upload.jks" > android/key.properties
+        echo "storeFile=./keystore.jks" > android/key.properties
         echo "storePassword=$ANDROID_STORE_PASSWORD" >> android/key.properties
         echo "keyPassword=$ANDROID_KEY_PASSWORD" >> android/key.properties
         echo "keyAlias=$ANDROID_KEY_ALIAS" >> android/key.properties
