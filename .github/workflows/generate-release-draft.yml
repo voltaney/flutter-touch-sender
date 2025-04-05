@@ -29,6 +29,9 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       # ラベルが存在しなければ作成
       - name: Ensure autolabeler labels exist
         uses: actions/github-script@v7
