@@ -45,33 +45,49 @@ jobs:
           script: |
             const fs = require('fs');
             const yaml = require('js-yaml');
-            
+
             const configPath = '.github/release-drafter.yml';
             const content = fs.readFileSync(configPath, 'utf8');
             const config = yaml.load(content);
-            
-            if (!config.autolabeler) {
-              console.log("No autolabeler section found.");
-              return;
-            }
-            
-            const existingLabels = await github.rest.issues.listLabelsForRepo({
+
+            const DEFAULT_COLOR = 'ededed';  // 色は最後で指定
+
+            // 既存ラベル一覧を取得
+            const existingLabelsResponse = await github.rest.issues.listLabelsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               per_page: 100,
             });
-            
-            const existingLabelNames = existingLabels.data.map(label => label.name);
-            
-            for (const rule of config.autolabeler) {
-              const label = rule.label;
-              if (!existingLabelNames.includes(label)) {
-                console.log(`Creating label: ${label}`);
+            const existingLabels = new Set(existingLabelsResponse.data.map(label => label.name));
+
+            // autolabeler + exclude-labels のラベルをセットで保持（重複防止）
+            const labelsToEnsure = new Set();
+
+            // autolabelerのラベル追加
+            if (Array.isArray(config.autolabeler)) {
+              for (const rule of config.autolabeler) {
+                if (rule.label) {
+                  labelsToEnsure.add(rule.label);
+                }
+              }
+            }
+
+            // exclude-labelsのラベル追加
+            if (Array.isArray(config['exclude-labels'])) {
+              for (const label of config['exclude-labels']) {
+                labelsToEnsure.add(label);
+              }
+            }
+
+            // ラベル作成処理
+            for (const label of labelsToEnsure) {
+              if (!existingLabels.has(label)) {
+                console.log(`Creating label: ${label} with color ${DEFAULT_COLOR}`);
                 await github.rest.issues.createLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   name: label,
-                  color: 'ededed',
+                  color: DEFAULT_COLOR,
                 });
               } else {
                 console.log(`Label already exists: ${label}`);
