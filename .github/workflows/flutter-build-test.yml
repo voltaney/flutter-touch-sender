@@ -16,6 +16,12 @@ jobs:
 
       - name: Arrange keystore file
         uses: ./.github/actions/arrange-keystore-file
+        with:
+          jks_base64: ${{ secrets.KEYSTORE }}
+          key_password: ${{ secrets.KEYSTORE_ALIAS }}
+          key_alias: ${{ secrets.KEY_ALIAS }}
+          store_password: ${{ secrets.KEYSTORE_PASSWORD }}
+
 
       - name: Setup Flutter
         uses: ./.github/actions/setup-flutter
