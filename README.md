@@ -63,3 +63,10 @@ For more information about related projects, check the [Related Projects](#relat
 
 - [TouchSenderInterpreter](https://github.com/voltaney/TouchSenderInterpreter): A library for parsing data received from this application. Available on [NuGet](https://www.nuget.org/packages/Voltaney.TouchSenderInterpreter/).
 - [TouchSenderTablet](https://github.com/voltaney/TouchSenderTablet): A Windows application that controls the PC mouse using data received from this application.
+
+## Deployment
+
+1. When the GitHub workflow `Deliver` is executed, a pull request (PR) for version bump is created.
+1. Once the version bump PR is merged, a version tag is applied.
+1. The version tag triggers the release process, which builds the APK and attaches it to the release.
+
