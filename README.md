@@ -1,17 +1,23 @@
 <div align="center">
 <img src="assets/icon/icon.png" width="80" />
 <h1>Touch Sender</h1>
-Touch Sender is a multithreaded application that detects single-touch input and transmits the touch state over UDP at up to 1000 Hz. Touch detection and UDP transmission run on separate threads to ensure high responsiveness and performance.
+<p>Touch Sender is a multi-threaded application that detects single touch inputs and transmits the touch state via UDP at up to 1000 Hz. </p>
 </div>
 
 <table align="center">
     <tr>
         <td align="center">
-            <img src="docs/assets/screenshot1.jpg" height="400" /><br />
+            <img src="docs/assets/screenshot1.jpg" height="500" />
+        </td>
+        <td align="center">
+            <img src="docs/assets/screenshot2.jpg" height="500" />
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
             <p>Settings screen</p>
         </td>
         <td align="center">
-            <img src="docs/assets/screenshot2.jpg" height="400" /><br />
             <p>Touchpad screen</p>
         </td>
     </tr>
@@ -19,8 +25,8 @@ Touch Sender is a multithreaded application that detects single-touch input and 
 
 ## Features
 
-- Sends touch state (single-touch) via UDP.
-- Transmits data at up to 1000 Hz.
+- Sends touch status (single touch) via UDP.
+- Transmits data at up to 1000Hz.
 - Multithreaded design: touch detection and UDP transmission run on separate threads.
 
 ## Installation
@@ -40,7 +46,7 @@ Currently not available.
 
 ### Spin Rhythm XD
 
-Here is a showcase video demonstrating how a game is played using the data sent by this app and received by [TouchSenderTablet](https://github.com/voltaney/TouchSenderTablet):
+Here is a demonstration video showing how to play a game using the data sent by this application, using the [TouchSenderTablet](https://github.com/voltaney/TouchSenderTablet) as the receiver.
 
 https://github.com/user-attachments/assets/2acf9f1d-42dd-42c2-a63c-a2d8ba15cc77
 
@@ -48,10 +54,10 @@ For more information about related projects, check the [Related Projects](#relat
 
 ## Limitations
 
-- Implemented in Flutter, which may introduce slight overhead due to the Gesture Arena mechanism.
-- Touch data is currently handled in Flutter's logical pixels, not in physical screen coordinates.
+- Implemented in Flutter, which may cause some overhead due to the gesture arena mechanism.
+- Touch data is currently handled in [Flutter's logical pixels](https://api.flutter.dev/flutter/dart-ui/FlutterView/devicePixelRatio.html), not in physical screen coordinates.
 
 ## Related Projects
 
 - [TouchSenderInterpreter](https://github.com/voltaney/TouchSenderInterpreter): A library for parsing data received from this application. Available on [NuGet](https://www.nuget.org/packages/Voltaney.TouchSenderInterpreter/).
-- [TouchSenderTablet](https://github.com/voltaney/TouchSenderTablet): A Windows application that uses the data received from this application to control the mouse on a PC.
+- [TouchSenderTablet](https://github.com/voltaney/TouchSenderTablet): A Windows application that controls the PC mouse using data received from this application.
