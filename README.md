@@ -66,7 +66,7 @@ For more information about related projects, check the [Related Projects](#relat
 
 ## Deployment
 
-1. When the GitHub workflow `Deliver` is executed, a pull request (PR) for version bump is created.
+1. When the GitHub workflow `Bump new version` is executed, a pull request (PR) for version bump is created.
 1. Once the version bump PR is merged, a version tag is applied.
 1. The version tag triggers the release process, which builds the APK and attaches it to the release.
 
