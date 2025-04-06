@@ -218,7 +218,7 @@ abstract class AppLocalizations {
   /// No description provided for @pcSetupDescription1.
   ///
   /// In en, this message translates to:
-  /// **'Install \"TouchSender Tablet\" from the Windows Store'**
+  /// **'Install \"TouchSenderTablet\" from GitHub'**
   String get pcSetupDescription1;
 
   /// No description provided for @pcSetupDescription2.
@@ -232,6 +232,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start both the PC app and this app (order does not matter)'**
   String get pcSetupDescription3;
+
+  /// No description provided for @pcSetupGitHubLink.
+  ///
+  /// In en, this message translates to:
+  /// **'TouchSenderTablet'**
+  String get pcSetupGitHubLink;
 
   /// No description provided for @touchScreenRotation.
   ///

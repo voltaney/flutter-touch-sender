@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:touch_sender/l10n/app_localizations.dart';
 import 'package:touch_sender/util/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -28,6 +29,11 @@ class HelpScreen extends StatelessWidget {
                 AppLocalizations.of(context)!.pcSetupDescription3,
               ],
             ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.open_in_new),
+              onPressed: _launchGitHubURL,
+              label: Text(AppLocalizations.of(context)!.pcSetupGitHubLink),
+            ),
             HelpSimpleSection(
               icon: Icons.screen_rotation,
               title: AppLocalizations.of(context)!.touchScreenRotation,
@@ -50,6 +56,15 @@ class HelpScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> _launchGitHubURL() async {
+  final url = Uri.parse(
+    'https://github.com/voltaney/TouchSenderTablet/releases',
+  );
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    throw Exception('Could not launch $url');
   }
 }
 

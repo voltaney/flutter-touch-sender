@@ -84,13 +84,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get pcSetup => 'PC側のセットアップ';
 
   @override
-  String get pcSetupDescription1 => 'Windowsストアで「TouchSenderタブレット」をインストール';
+  String get pcSetupDescription1 => 'GitHubから「TouchSenderTablet」をインストール';
 
   @override
   String get pcSetupDescription2 => 'PCアプリと本アプリのIPアドレス・ポート番号を合わせて設定';
 
   @override
   String get pcSetupDescription3 => 'PCアプリと本アプリをそれぞれ開始する（順不同）';
+
+  @override
+  String get pcSetupGitHubLink => 'TouchSenderTablet';
 
   @override
   String get touchScreenRotation => '回転可能なタッチ画面';
