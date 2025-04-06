@@ -1,7 +1,8 @@
 <div align="center">
 <img src="assets/icon/icon.png" width="80" />
 <h1>Touch Sender</h1>
-<p>Touch Sender is a multi-threaded application that detects single touch inputs and transmits the touch state via UDP at up to 1000 Hz. </p>
+    <p>Touch Sender is a <b>multi-threaded</b> application that detects <b>single-touch</b> inputs and transmits the state via UDP at up to 1000 Hz. <br />
+        Designed for <b>responsive performance</b> and <b>low latency communication</b>, it ensures seamless, high-speed data transfer for time-critical applications.</p>
 </div>
 
 <table align="center">
@@ -56,6 +57,7 @@ For more information about related projects, check the [Related Projects](#relat
 
 - Implemented in Flutter, which may cause some overhead due to the gesture arena mechanism.
 - Touch data is currently handled in [Flutter's logical pixels](https://api.flutter.dev/flutter/dart-ui/FlutterView/devicePixelRatio.html), not in physical screen coordinates.
+- Currently, only single-touch is supported. Multi-touch support is not yet implemented.
 
 ## Related Projects
 
