@@ -1,7 +1,7 @@
 <div align="center">
 <img src="assets/icon/icon.png" width="80" />
 <h1>Touch Sender</h1>
-    <p>Touch Sender is a <b>multi-threaded</b> application that detects <b>single-touch</b> inputs and transmits the state via UDP at up to 1000 Hz. <br />
+    <p>A <b>multi-threaded</b> application that detects <b>single-touch</b> inputs and transmits the state via UDP at up to 1000 Hz. <br />
         Designed for <b>responsive performance</b> and <b>low latency communication</b>, it ensures seamless, high-speed data transfer for time-critical applications.</p>
 </div>
 
